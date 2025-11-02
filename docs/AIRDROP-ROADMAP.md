@@ -2,18 +2,31 @@
 
 **Status:** Planning Phase  
 **Start Date:** November 2025  
-**Target Launch:** Q1 2026
+**Target Mainnet Launch:** Q4 2026 (Earliest)
 
 ---
 
 ## 📅 Timeline Overview
 
 ```
-Nov 2025 ────► Dec 2025 ────► Jan 2026 ────► Feb 2026 ────► Q1 2026
-  │              │              │              │
-  └─ Planning    └─ Development └─ Testing    └─ Launch
-     & Review       & Integration   & Audit      (Sepolia)
+Nov 2025 ────► Dec 2025 ────► Jan 2026 ────► Feb 2026 ────► Q1-Q4 2026
+  │              │              │              │              │
+  └─ Planning    └─ Development └─ Testing    └─ Launch      └─ Audit & Mainnet
+     & Review       & Integration   & Audit      (Sepolia)      (Q4 2026)
 ```
+
+---
+
+## Phase Overview
+
+| Phase | Timeframe | Focus |
+|-------|-----------|-------|
+| **Phase 1** | Nov-Dec 2025 | Smart Contract Development |
+| **Phase 2** | Dec 2025-Jan 2026 | Backend API Implementation |
+| **Phase 3** | Jan-Feb 2026 | Frontend Development |
+| **Phase 4** | Feb 2026 | Bot Integration & Testing |
+| **Phase 5** | Feb-Mar 2026 | Security Audit & Refinement |
+| **Phase 6** | Q4 2026 (Earliest) | Mainnet Deployment |
 
 ---
 

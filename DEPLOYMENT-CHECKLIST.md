@@ -361,13 +361,13 @@ Pending (Next phase):
 - ⏳ Backend API implementation
 - ⏳ Frontend UI creation
 - ⏳ Bot integration testing
-- ⏳ Community airdrop launch
+- ⏳ Community airdrop launch (Q1 2026)
 
-### PHASE 2-6: 📅 PLANNED
-- ⏳ Security audit (Q1 2026)
-- ⏳ Mainnet deployment (Q2 2026)
-- ⏳ DAO governance (Q3 2026)
-- ⏳ VERA/PAXIS integration (Q4 2026+)
+### PHASE 2-5: 📅 PLANNED
+- ⏳ Security audit (Q2 2026)
+- ⏳ Mainnet preparation (Q3 2026)
+- ⏳ Mainnet deployment (Q4 2026 - Earliest)
+- ⏳ VERA/PAXIS integration (2026 Q4 - 2027)
 
 ---
 

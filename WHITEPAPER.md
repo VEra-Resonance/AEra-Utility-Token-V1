@@ -100,8 +100,9 @@ All tokens circulating on testnets or in community drops are **test allocations*
 | **Phase 0** | 2025 Q4 | Verification on Sepolia (Etherscan + Sourcify) ✅ |
 | **Phase 1** | 2026 Q1 | Multi-Sig Ownership Transfer + Public Test Airdrop |
 | **Phase 2** | 2026 Q2 | Audit & Governance Integration (Snapshot DAO test) |
-| **Phase 3** | 2026 Q3 | Mainnet Deployment + Liquidity Lock (Community vote) |
-| **Phase 4** | 2026 Q4 → 2027 | VERA / PAXIS Integration + AI-Resonance Metrics API |
+| **Phase 3** | 2026 Q3 | Mainnet Preparation & Security Finalization |
+| **Phase 4** | 2026 Q4 (Earliest) | Mainnet Deployment + Liquidity Lock (Community vote) |
+| **Phase 5** | 2026 Q4 → 2027 | VERA / PAXIS Integration + AI-Resonance Metrics API |
 
 ---
 
