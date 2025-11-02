@@ -2,7 +2,25 @@
 
 **Datum:** 2. November 2025  
 **Network:** Sepolia Testnet  
-**Contract:** 0x5032206396A6001eEaD2e0178C763350C794F69e
+**Contract:** 0x5032206396A6001eEaD2e0178C763350C794F69e  
+**Owner:** 0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93 (Gnosis Safe Multi-Sig 2-of-3)
+
+---
+
+## ⚠️ WICHTIG: Multi-Sig Ownership
+
+Das Minting wird jetzt durch eine **Gnosis Safe Multi-Signature Wallet** geschützt:
+
+- **Owner Address:** 0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
+- **Typ:** 2-of-3 Multi-Sig (2 von 3 Unterschriften erforderlich)
+- **Bedeutung:** NIEMAND kann alleine minten → Minimales Vertrauen erforderlich
+- **Sicherheit:** Tokens sind maximal geschützt vor unkontrolliertem Minting
+
+### Warum Multi-Sig?
+✅ Keine Einzelperson kann alleine Token creieren  
+✅ Mindestens 2 unabhängige Bestätigungen nötig  
+✅ Transparenz & Governance durch Blockchain  
+✅ Maximale Sicherheit für AERA Holder  
 
 ---
 
@@ -17,6 +35,18 @@
 ---
 
 ## ✅ Methode 1: MetaMask + Etherscan (EINFACHSTE METHODE)
+
+### ⚠️ WICHTIG: Safe-Bestätigung erforderlich
+
+Da der Contract im Besitz einer **Gnosis Safe Multi-Sig Wallet** ist, wird jede Mint-Transaktion so funktionieren:
+
+1. **Transaktion wird eingereicht** → In der Safe als "Proposal" angezeigt
+2. **Erste Bestätigung** → Ein Signer bestätigt die Transaktion
+3. **Zweite Bestätigung** → Ein zweiter Signer bestätigt → **Transaktion wird ausgeführt**
+
+**Safe-Link:** https://app.safe.global/home?safe=sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
+
+---
 
 ### Schritt 1: Etherscan öffnen
 
@@ -62,11 +92,17 @@ Gehe zu: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350
 2. MetaMask öffnet sich
 3. Überprüfe Gas-Gebühren
 4. Klicke **"Confirm"**
-5. Warte auf Bestätigung (~30 Sekunden)
+5. **Safe wird aktiviert:**
+   - Transaktion erscheint in der Safe als "Pending"
+   - **Signer 1** muss bestätigen
+   - **Signer 2** muss bestätigen (triggert Ausführung)
+   - Warte ~30 Sekunden bis Transaktion auf Blockchain ist
 
 ### ✅ Fertig!
 
 Neue Tokens sind in deiner Wallet! 🎉
+
+**Safe-Status überprüfen:** https://app.safe.global/home?safe=sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
 
 ---
 
@@ -315,12 +351,23 @@ npx hardhat run scripts/check-balance.js --network sepolia
 
 ### ✅ Erlaubt:
 - Minten bis zur MAX_SUPPLY (1 Milliarde)
-- Nur Owner kann minten
+- Nur der Multi-Sig Owner kann Mint-Transaktionen initiieren
+- Benötigt 2 von 3 Signer-Bestätigungen in der Safe
 - Unlimited Mint-Anzahl (solange unter Max)
 
 ### ❌ Verboten:
 - Minten über MAX_SUPPLY hinaus → **Error!**
-- Minten wenn nicht Owner → **Error!**
+- Minten ohne Safe-Bestätigung → **Transaktion scheitert!**
+- Minten ohne 2-of-3 Bestätigungen → **Transaktion wird nicht ausgeführt!**
+
+### Multi-Sig Sicherheit:
+```
+Mint-Transaktion:
+1. Initiator submittet Transaktion an Safe
+2. Signer 1: ✅ Bestätigt (1/2)
+3. Signer 2: ✅ Bestätigt → Transaktion AUSGEFÜHRT! ✅
+4. Signer 3: (nicht nötig bei 2-of-3)
+```
 
 ### Beispiel: MAX_SUPPLY erreichen
 
@@ -429,19 +476,27 @@ https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e#
 ## ❓ FAQ
 
 **F: Kann ich als nicht-Owner minten?**  
-A: ❌ Nein, nur der Owner (0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266) kann minten.
+A: ❌ Nein, nur die Safe (0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93) kann Minting initiieren. Und dann benötigt es 2-of-3 Bestätigungen.
 
 **F: Was ist die Mint-Grenze?**  
 A: Max 1 Milliarde AERA. Danach geht's nicht mehr.
 
 **F: Kann ich den Owner ändern?**  
-A: ✅ Ja, mit `transferOwnership()` Funktion (nur Owner).
+A: ✅ Nur wenn 2-of-3 Signer in der Safe zustimmen (transferOwnership).
 
 **F: Fallen Gas-Gebühren an?**  
-A: ✅ Ja, aber auf Sepolia sehr billig (Test-ETH).
+A: ✅ Ja, aber auf Sepolia sehr billig (Test-ETH). Plus Safe-Bestätigungen benötigen auch Gas.
+
+**F: Wie lange dauert eine Mint-Transaktion?**  
+A: ~30 Sekunden bis Ausführung + Zeit bis 2 Signer bestätigen (variabel, normalerweise <5 min).
 
 **F: Kann ich das Minten deaktivieren?**  
-A: ✅ Ja, mit `renounceOwnership()` (dann kann niemand mehr minten).
+A: ✅ Ja, mit `renounceOwnership()` (benötigt 2-of-3 Safe-Bestätigungen) - dann kann niemand mehr minten.
+
+**F: Sind Mint-Transaktionen öffentlich sichtbar?**  
+A: ✅ Ja! Alles auf dem Sepolia Testnet:
+   - https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
+   - Safe-Transaktionen: https://app.safe.global/home?safe=sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
 
 ---
 
