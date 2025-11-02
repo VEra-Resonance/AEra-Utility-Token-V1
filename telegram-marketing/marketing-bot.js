@@ -483,6 +483,7 @@ bot.onText(/\/help(@AEra_Official_Bot)?/, (msg) => {
 **⚖️ Legal & Compliance:**
 /disclaimer - Full legal notice & disclaimer
 /consent - Confirm you understand test token
+/whitepaper - Read the AEra White Paper
 
 **🔧 Utility:**
 /help - This help`;
@@ -504,6 +505,73 @@ bot.onText(/\/help(@AEra_Official_Bot)?/, (msg) => {
 *Powered by AERA Token Community* ❤️`;
 
     bot.sendMessage(chatId, helpMessage, { parse_mode: 'Markdown' });
+});
+
+// /whitepaper Command
+bot.onText(/\/whitepaper(@AEra_Official_Bot)?/, (msg) => {
+    const chatId = msg.chat.id;
+    marketingStats.botCommands++;
+    
+    const whitepaperMessage = `📄 *AEra White Paper v1.0*
+
+*"The Resonant Standard"*
+
+🎯 *Vision:*
+AEra is built around resonance – the alignment between human intent and transparent digital systems. Trust through verifiability.
+
+📋 *Core Principles:*
+• Transparency – Code first, all verifiable
+• Resonance – Value from clarity, not hype
+• Accountability – Every function auditable
+• Autonomy – No backdoors, fully open
+• Community Safety – Multi-sig + audit logs
+
+🔧 *Technical Specs:*
+• Symbol: AERA
+• Decimals: 18
+• Initial Supply: 100M
+• Max Supply: 1B
+• Owner: Gnosis Safe (2-of-3)
+• License: MIT Open Source
+
+⚖️ *Governance Model:*
+Collective stewardship, not corporate control. Emergency controls via Safe signatures only.
+
+🎁 *Airdrop Policy:*
+• No ICO / IDO / Fundraising
+• ≤50 AERA per wallet (test phase)
+• Signature-based eligibility (EIP-4361)
+• Zero personal data collection
+• Testnet-first, then Mainnet (post-audit)
+
+📊 *Use Cases:*
+• Verification layer for ecosystem nodes
+• Reputation marker for contributors
+• Resonance metrics for alignment tracking
+• Access token for research forums
+
+🔐 *Security Architecture:*
+• Multi-Sig Safe for admin functions
+• Pausable mechanism for emergencies
+• Audit tools (Slither, Hardhat, Foundry)
+• Bug bounty program (after Mainnet)
+
+🗺️ *Roadmap:*
+Q4 2025: Etherscan verification ✅
+Q1 2026: Multi-Sig + Test Airdrop
+Q2 2026: Audit + DAO Integration
+Q3 2026: Mainnet Deployment
+Q4 2026+: VERA/PAXIS Integration
+
+⚠️ *Legal Notice:*
+NOT a financial instrument, security, or investment. No profit guarantee. Testnet tokens have no monetary value.
+
+📖 *Full White Paper:*
+https://github.com/koal0308/AEra/blob/master/WHITEPAPER.md
+
+_"AEra is not a promise of value – it's an invitation to verify value yourself."_`;
+
+    bot.sendMessage(chatId, whitepaperMessage, { parse_mode: 'Markdown', disable_web_page_preview: true });
 });
 
 // /roadmap Command
