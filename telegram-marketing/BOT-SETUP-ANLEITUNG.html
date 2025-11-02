@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AERA Bot Setup - Privacy Mode Fix</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .problem {
+            background: #fee;
+            padding: 20px;
+            border-left: 4px solid #f44;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .solution {
+            background: #efe;
+            padding: 20px;
+            border-left: 4px solid #4f4;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .steps {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .step {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-left: 3px solid #667eea;
+            border-radius: 3px;
+        }
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .option {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+        }
+        .option h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .highlight {
+            background: #ffeb3b;
+            padding: 2px 5px;
+            font-weight: bold;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AERA Bot Setup Guide</h1>
+        
+        <div class="problem">
+            <h2>❌ Das Problem</h2>
+            <p><strong>/refer Command funktioniert nicht in Gruppen</strong></p>
+            <ul>
+                <li>Bot empfängt keine Messages in Supergroups</li>
+                <li>Privacy Mode ist standardmäßig aktiviert</li>
+                <li>Bot sieht nur Commands die direkt an ihn gerichtet sind</li>
+            </ul>
+            <p><strong>Test-Log zeigt:</strong></p>
+            <code>Chat Type: supergroup (ID: -1003264056350)</code>
+        </div>
+
+        <div class="solution">
+            <h2>✅ Die Lösung</h2>
+            <p>Es gibt <span class="highlight">2 Optionen</span> um das Problem zu lösen:</p>
+        </div>
+
+        <div class="option">
+            <h3>🚀 OPTION 1: Privater Chat (Sofort-Test)</h3>
+            <p><strong>✨ Empfohlen für schnellen Test</strong></p>
+            
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Öffne Telegram App
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Suche nach: <code>@AEra_Official_Bot</code>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Öffne einen <strong>PRIVATEN CHAT</strong> (nicht in einer Gruppe!)
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Klicke auf <strong>"START"</strong> oder <strong>"RESTART"</strong>
+                </div>
+                <div class="step">
+                    <span class="step-number">5</span>
+                    Schreibe: <code>/refer</code>
+                </div>
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <strong>✅ Bot antwortet sofort mit deinem Referral Link!</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="option">
+            <h3>🔧 OPTION 2: Privacy Mode ausschalten (Dauerhaft)</h3>
+            <p><strong>🏆 Empfohlen für Gruppen-Funktionalität</strong></p>
+            
+            <div class="warning">
+                <strong>⚠️ Wichtig:</strong> Nach dieser Änderung kann der Bot ALLE Messages in Gruppen lesen (notwendig für vollen Feature-Support)
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    Öffne Telegram und suche: <code>@BotFather</code>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    Schreibe: <code>/mybots</code>
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    Wähle: <code>@AEra_Official_Bot</code>
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    Wähle: <strong>Bot Settings</strong>
+                </div>
+                <div class="step">
+                    <span class="step-number">5</span>
+                    Wähle: <strong>Group Privacy</strong>
+                </div>
+                <div class="step">
+                    <span class="step-number">6</span>
+                    Wähle: <strong>Turn OFF</strong> (Privacy Mode deaktivieren)
+                </div>
+                <div class="step">
+                    <span class="step-number">7</span>
+                    BotFather bestätigt: <em>"Success! The new status is: DISABLED"</em>
+                </div>
+                <div class="step">
+                    <span class="step-number">8</span>
+                    <strong>✅ Bot kann jetzt alle Messages in Gruppen sehen!</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="solution">
+            <h2>🎯 Was passiert danach?</h2>
+            <ul>
+                <li>✅ <code>/refer</code> funktioniert im privaten Chat</li>
+                <li>✅ <code>/refer</code> funktioniert in Gruppen (nach Option 2)</li>
+                <li>✅ Alle anderen Commands funktionieren</li>
+                <li>✅ Referral System ist voll funktionsfähig</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <h3>💡 Technischer Hintergrund</h3>
+            <p><strong>Warum Privacy Mode?</strong></p>
+            <ul>
+                <li>Telegram aktiviert Privacy Mode standardmäßig für alle Bots</li>
+                <li>Privacy Mode = Bot sieht nur Commands mit <code>@BotName</code></li>
+                <li>Im privaten Chat ist Privacy Mode irrelevant</li>
+                <li>Für Marketing-Bots in Gruppen sollte Privacy Mode OFF sein</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #eee;">
+            <h3>🚀 AERA Token Bot</h3>
+            <p><code>@AEra_Official_Bot</code></p>
+            <p style="color: #999; font-size: 14px;">Marketing Automation • Airdrop System • Multi-Language Support</p>
+        </div>
+    </div>
+</body>
+</html>

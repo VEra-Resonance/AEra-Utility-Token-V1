@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÆRA Token - MetaMask Integration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        h1 { text-align: center; margin-bottom: 30px; }
+        .token-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        .button:hover { background: #45a049; transform: translateY(-2px); }
+        .button:disabled { background: #666; cursor: not-allowed; }
+        .status { margin: 15px 0; padding: 10px; border-radius: 5px; }
+        .success { background: rgba(76, 175, 80, 0.3); }
+        .error { background: rgba(244, 67, 54, 0.3); }
+        .warning { background: rgba(255, 193, 7, 0.3); }
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🪙 ÆRA Token - MetaMask Integration</h1>
+        
+        <div class="token-info">
+            <h3>📊 Token Details</h3>
+            <div class="code-block">
+                <strong>Name:</strong> ÆRA Token<br>
+                <strong>Symbol:</strong> AERA<br>
+                <strong>Contract:</strong> <span id="contractAddress">0x5FbDB2315678afecb367f032d93F642f64180aa3</span><br>
+                <strong>Decimals:</strong> 18<br>
+                <strong>Network:</strong> Hardhat Local (Chain ID: 31337)
+            </div>
+        </div>
+
+        <div id="status" class="status warning">
+            <strong>Status:</strong> MetaMask nicht verbunden
+        </div>
+
+        <div style="text-align: center;">
+            <button class="button" onclick="connectWallet()">🦊 MetaMask verbinden</button>
+            <button class="button" onclick="addTokenToWallet()">➕ AERA Token hinzufügen</button>
+            <button class="button" onclick="checkBalance()">💰 Balance prüfen</button>
+        </div>
+
+        <div class="token-info">
+            <h3>⚙️ MetaMask Network Setup</h3>
+            <p>Um den Token zu sehen, füge das Hardhat Localhost Netzwerk zu MetaMask hinzu:</p>
+            <div class="code-block">
+                <strong>Network Name:</strong> Hardhat Local<br>
+                <strong>RPC URL:</strong> http://127.0.0.1:8545<br>
+                <strong>Chain ID:</strong> 31337<br>
+                <strong>Currency Symbol:</strong> ETH
+            </div>
+            <button class="button" onclick="addNetwork()">🌐 Netzwerk hinzufügen</button>
+        </div>
+
+        <div class="token-info">
+            <h3>🔑 Test Account</h3>
+            <p>Importiere einen Test-Account mit Token:</p>
+            <div class="code-block">
+                <strong>Private Key:</strong> 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80<br>
+                <strong>Address:</strong> 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266<br>
+                <strong>AERA Balance:</strong> ~99,999,000 AERA
+            </div>
+            <p><strong>⚠️ Warnung:</strong> Nur für Testzwecke! Niemals echtes Geld senden!</p>
+        </div>
+
+        <div id="balanceInfo" style="display:none;" class="token-info">
+            <h3>💎 Deine AERA Balance</h3>
+            <div class="code-block" id="balanceDisplay"></div>
+        </div>
+    </div>
+
+    <script>
+        const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+        const tokenSymbol = 'AERA';
+        const tokenDecimals = 18;
+        
+        let userAccount = null;
+
+        async function connectWallet() {
+            if (typeof window.ethereum === 'undefined') {
+                document.getElementById('status').innerHTML = '<strong>❌ Fehler:</strong> MetaMask nicht installiert!';
+                document.getElementById('status').className = 'status error';
+                return;
+            }
+
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAccount = accounts[0];
+                document.getElementById('status').innerHTML = `<strong>✅ Verbunden:</strong> ${userAccount.slice(0,6)}...${userAccount.slice(-4)}`;
+                document.getElementById('status').className = 'status success';
+            } catch (error) {
+                document.getElementById('status').innerHTML = `<strong>❌ Fehler:</strong> ${error.message}`;
+                document.getElementById('status').className = 'status error';
+            }
+        }
+
+        async function addNetwork() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [{
+                        chainId: '0x7a69', // 31337 in hex
+                        chainName: 'Hardhat Local',
+                        rpcUrls: ['http://127.0.0.1:8545'],
+                        nativeCurrency: {
+                            name: 'Ethereum',
+                            symbol: 'ETH',
+                            decimals: 18
+                        }
+                    }]
+                });
+                alert('✅ Netzwerk erfolgreich hinzugefügt!');
+            } catch (error) {
+                alert('❌ Fehler beim Hinzufügen des Netzwerks: ' + error.message);
+            }
+        }
+
+        async function addTokenToWallet() {
+            try {
+                const wasAdded = await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: {
+                        type: 'ERC20',
+                        options: {
+                            address: contractAddress,
+                            symbol: tokenSymbol,
+                            decimals: tokenDecimals,
+                            image: 'https://via.placeholder.com/64x64/667eea/ffffff?text=ÆRA'
+                        }
+                    }
+                });
+
+                if (wasAdded) {
+                    alert('✅ ÆRA Token erfolgreich zu MetaMask hinzugefügt!');
+                } else {
+                    alert('❌ Token wurde nicht hinzugefügt.');
+                }
+            } catch (error) {
+                alert('❌ Fehler: ' + error.message);
+            }
+        }
+
+        async function checkBalance() {
+            if (!userAccount) {
+                alert('❌ Bitte erst MetaMask verbinden!');
+                return;
+            }
+
+            try {
+                // ERC20 balanceOf call
+                const balance = await window.ethereum.request({
+                    method: 'eth_call',
+                    params: [{
+                        to: contractAddress,
+                        data: '0x70a08231000000000000000000000000' + userAccount.slice(2) // balanceOf(address)
+                    }, 'latest']
+                });
+
+                // Convert hex to decimal and format
+                const balanceDecimal = parseInt(balance, 16);
+                const balanceFormatted = (balanceDecimal / Math.pow(10, 18)).toLocaleString();
+                
+                document.getElementById('balanceDisplay').innerHTML = `
+                    <strong>Address:</strong> ${userAccount}<br>
+                    <strong>AERA Balance:</strong> ${balanceFormatted} AERA<br>
+                    <strong>Raw Value:</strong> ${balance}
+                `;
+                document.getElementById('balanceInfo').style.display = 'block';
+                
+            } catch (error) {
+                alert('❌ Fehler beim Abrufen der Balance: ' + error.message);
+            }
+        }
+
+        // Auto-connect if already authorized
+        window.addEventListener('load', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    userAccount = accounts[0];
+                    document.getElementById('status').innerHTML = `<strong>✅ Auto-Verbunden:</strong> ${userAccount.slice(0,6)}...${userAccount.slice(-4)}`;
+                    document.getElementById('status').className = 'status success';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÆRA Token zu MetaMask hinzufügen</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            margin: 20px 0;
+        }
+        h1 { text-align: center; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .token-info {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .button:hover { 
+            background: #45a049; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .button:disabled { background: #666; cursor: not-allowed; }
+        .status { 
+            margin: 15px 0; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-weight: bold;
+        }
+        .success { background: rgba(76, 175, 80, 0.3); border-left: 4px solid #4CAF50; }
+        .error { background: rgba(244, 67, 54, 0.3); border-left: 4px solid #f44336; }
+        .warning { background: rgba(255, 193, 7, 0.3); border-left: 4px solid #FFC107; }
+        .code-block {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .copy-btn {
+            background: #2196F3;
+            font-size: 14px;
+            padding: 8px 16px;
+            margin-left: 10px;
+        }
+        .step {
+            background: rgba(76, 175, 80, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        .highlight {
+            background: rgba(255, 215, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        @media (max-width: 600px) {
+            .links { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🪙 ÆRA Token zu MetaMask hinzufügen</h1>
+
+    <div class="container">
+        <div id="status" class="status warning">
+            <strong>Status:</strong> MetaMask nicht verbunden - Klicke "MetaMask verbinden"
+        </div>
+
+        <div class="token-info">
+            <h2>🎉 Dein ÆRA Token ist LIVE!</h2>
+            <div class="code-block">
+                <strong>Contract Address:</strong> 0x5032206396A6001eEaD2e0178C763350C794F69e
+                <button class="copy-btn" onclick="copyToClipboard('0x5032206396A6001eEaD2e0178C763350C794F69e')">📋 Kopieren</button><br>
+                <strong>Symbol:</strong> AERA<br>
+                <strong>Decimals:</strong> 18<br>
+                <strong>Network:</strong> Sepolia Testnet<br>
+                <strong>Total Supply:</strong> 100,000,000 AERA
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="button" onclick="connectWallet()">🦊 MetaMask verbinden</button>
+            <button class="button" onclick="addTokenToWallet()">➕ AERA Token hinzufügen</button>
+            <button class="button" onclick="switchToSepolia()">🌐 Zu Sepolia wechseln</button>
+        </div>
+
+        <div class="step">
+            <h3>📋 Manuell hinzufügen (falls Button nicht funktioniert):</h3>
+            <p><strong>1.</strong> MetaMask öffnen</p>
+            <p><strong>2.</strong> Zu <span class="highlight">Sepolia Test Network</span> wechseln</p>
+            <p><strong>3.</strong> "Token importieren" klicken</p>
+            <p><strong>4.</strong> Diese Daten eingeben:</p>
+            <div class="code-block">
+                Token-Contract-Adresse: <span id="contractAddr">0x5032206396A6001eEaD2e0178C763350C794F69e</span><br>
+                Token-Symbol: AERA<br>
+                Dezimalstellen: 18
+            </div>
+        </div>
+
+        <div class="links">
+            <a href="https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e" target="_blank" class="button">
+                🔍 Auf Etherscan ansehen
+            </a>
+            <a href="https://sepolia.etherscan.io/tx/0xe30b7cf51601f9f6238a870e9c8c87523e5b40e922dd0116b6305a306ce8b79b" target="_blank" class="button">
+                📄 Deployment Transaction
+            </a>
+        </div>
+
+        <div class="token-info">
+            <h3>🚀 Was du jetzt tun kannst:</h3>
+            <ul>
+                <li>✅ <strong>AERA Token in MetaMask anzeigen</strong></li>
+                <li>🎁 <strong>Token an Freunde senden</strong> (zum Testen)</li>
+                <li>🔄 <strong>Token-Funktionen testen</strong> (Transfer, Approve)</li>
+                <li>👥 <strong>Community aufbauen</strong></li>
+                <li>📈 <strong>Mainnet-Launch planen</strong></li>
+            </ul>
+        </div>
+
+        <div id="balanceInfo" style="display:none;" class="token-info">
+            <h3>💎 Deine AERA Token Balance</h3>
+            <div class="code-block" id="balanceDisplay"></div>
+            <button class="button" onclick="checkBalance()">🔄 Balance aktualisieren</button>
+        </div>
+    </div>
+
+    <script>
+        const contractAddress = '0x5032206396A6001eEaD2e0178C763350C794F69e';
+        const tokenSymbol = 'AERA';
+        const tokenDecimals = 18;
+        let userAccount = null;
+
+        async function connectWallet() {
+            if (typeof window.ethereum === 'undefined') {
+                document.getElementById('status').innerHTML = '<strong>❌ Fehler:</strong> MetaMask nicht installiert!';
+                document.getElementById('status').className = 'status error';
+                return;
+            }
+
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAccount = accounts[0];
+                document.getElementById('status').innerHTML = `<strong>✅ Verbunden:</strong> ${userAccount.slice(0,6)}...${userAccount.slice(-4)}`;
+                document.getElementById('status').className = 'status success';
+                
+                // Check if we're on Sepolia
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                if (chainId !== '0xaa36a7') { // Sepolia Chain ID
+                    document.getElementById('status').innerHTML += '<br><strong>⚠️ Warnung:</strong> Nicht auf Sepolia Netzwerk!';
+                    document.getElementById('status').className = 'status warning';
+                }
+            } catch (error) {
+                document.getElementById('status').innerHTML = `<strong>❌ Fehler:</strong> ${error.message}`;
+                document.getElementById('status').className = 'status error';
+            }
+        }
+
+        async function switchToSepolia() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0xaa36a7' }], // Sepolia
+                });
+                alert('✅ Erfolgreich zu Sepolia gewechselt!');
+            } catch (error) {
+                if (error.code === 4902) {
+                    // Chain not added, let's add it
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: '0xaa36a7',
+                                chainName: 'Sepolia Test Network',
+                                rpcUrls: ['https://eth-sepolia.g.alchemy.com/v2/f59yspJ3NKU1X0rQJduwR'],
+                                nativeCurrency: {
+                                    name: 'Ethereum',
+                                    symbol: 'ETH',
+                                    decimals: 18
+                                },
+                                blockExplorerUrls: ['https://sepolia.etherscan.io']
+                            }]
+                        });
+                        alert('✅ Sepolia Netzwerk hinzugefügt und gewechselt!');
+                    } catch (addError) {
+                        alert('❌ Fehler beim Hinzufügen von Sepolia: ' + addError.message);
+                    }
+                } else {
+                    alert('❌ Fehler beim Wechseln zu Sepolia: ' + error.message);
+                }
+            }
+        }
+
+        async function addTokenToWallet() {
+            if (!window.ethereum) {
+                alert('❌ MetaMask nicht gefunden!');
+                return;
+            }
+
+            try {
+                const wasAdded = await window.ethereum.request({
+                    method: 'wallet_watchAsset',
+                    params: {
+                        type: 'ERC20',
+                        options: {
+                            address: contractAddress,
+                            symbol: tokenSymbol,
+                            decimals: tokenDecimals,
+                            image: 'https://via.placeholder.com/64x64/667eea/ffffff?text=ÆRA'
+                        }
+                    }
+                });
+
+                if (wasAdded) {
+                    alert('🎉 ÆRA Token erfolgreich zu MetaMask hinzugefügt!\n\nDu solltest jetzt 100,000,000 AERA in deiner Wallet sehen!');
+                    document.getElementById('balanceInfo').style.display = 'block';
+                    checkBalance();
+                } else {
+                    alert('❌ Token wurde nicht hinzugefügt.');
+                }
+            } catch (error) {
+                alert('❌ Fehler: ' + error.message);
+            }
+        }
+
+        async function checkBalance() {
+            if (!userAccount) {
+                alert('❌ Bitte erst MetaMask verbinden!');
+                return;
+            }
+
+            try {
+                // ERC20 balanceOf call
+                const balance = await window.ethereum.request({
+                    method: 'eth_call',
+                    params: [{
+                        to: contractAddress,
+                        data: '0x70a08231000000000000000000000000' + userAccount.slice(2) // balanceOf(address)
+                    }, 'latest']
+                });
+
+                // Convert hex to decimal and format
+                const balanceDecimal = parseInt(balance, 16);
+                const balanceFormatted = (balanceDecimal / Math.pow(10, 18)).toLocaleString();
+                
+                document.getElementById('balanceDisplay').innerHTML = `
+                    <strong>Wallet:</strong> ${userAccount}<br>
+                    <strong>AERA Balance:</strong> ${balanceFormatted} AERA<br>
+                    <strong>Contract:</strong> ${contractAddress}
+                `;
+                
+            } catch (error) {
+                alert('❌ Fehler beim Abrufen der Balance: ' + error.message);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert('📋 In Zwischenablage kopiert: ' + text);
+            });
+        }
+
+        // Auto-connect if already authorized
+        window.addEventListener('load', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    userAccount = accounts[0];
+                    document.getElementById('status').innerHTML = `<strong>✅ Auto-Verbunden:</strong> ${userAccount.slice(0,6)}...${userAccount.slice(-4)}`;
+                    document.getElementById('status').className = 'status success';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

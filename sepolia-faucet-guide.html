@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepolia ETH Faucet Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin: 20px 0;
+        }
+        h1 { text-align: center; color: #fff; }
+        .faucet-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        .button:hover { background: #45a049; transform: translateY(-2px); }
+        .code {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        .step {
+            background: rgba(76, 175, 80, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #4CAF50;
+        }
+        .warning {
+            background: rgba(255, 193, 7, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #FFC107;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎁 Sepolia ETH Faucet Guide für ÆRA Token</h1>
+
+    <div class="container">
+        <h2>🚀 Schnellstart - Testnet ETH in 5 Minuten</h2>
+        
+        <div class="step">
+            <h3>Schritt 1: MetaMask Sepolia Netzwerk hinzufügen</h3>
+            <div class="code">
+                Network Name: Sepolia Test Network<br>
+                RPC URL: https://eth-sepolia.g.alchemy.com/v2/f59yspJ3NKU1X0rQJduwR<br>
+                Chain ID: 11155111<br>
+                Currency Symbol: ETH<br>
+                Block Explorer: https://sepolia.etherscan.io
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Schritt 2: Wallet-Adresse kopieren</h3>
+            <p>Kopiere deine MetaMask-Adresse (0x...)</p>
+        </div>
+
+        <div class="step">
+            <h3>Schritt 3: Faucets verwenden</h3>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🔥 Beste Sepolia Faucets</h2>
+
+        <div class="faucet-card">
+            <h3>1. 🥇 Alchemy Faucet (Empfohlen)</h3>
+            <p><strong>Menge:</strong> 0.5 ETH pro Tag</p>
+            <p><strong>Voraussetzung:</strong> Alchemy Account (kostenlos)</p>
+            <a href="https://sepoliafaucet.com/" class="button" target="_blank">
+                🔗 Alchemy Faucet öffnen
+            </a>
+            <p><em>✅ Zuverlässig, schnell, hohe Menge</em></p>
+        </div>
+
+        <div class="faucet-card">
+            <h3>2. 🥈 Sepolia PoW Faucet</h3>
+            <p><strong>Menge:</strong> 0.05 ETH pro Mining-Session</p>
+            <p><strong>Voraussetzung:</strong> Kurzes CPU-Mining (~30 Sekunden)</p>
+            <a href="https://sepolia-faucet.pk910.de/" class="button" target="_blank">
+                🔗 PoW Faucet öffnen
+            </a>
+            <p><em>⚡ Schnell verfügbar, kein Account nötig</em></p>
+        </div>
+
+        <div class="faucet-card">
+            <h3>3. 🥉 Chainlink Faucet</h3>
+            <p><strong>Menge:</strong> 0.1 ETH pro Tag</p>
+            <p><strong>Voraussetzung:</strong> GitHub/Twitter Account</p>
+            <a href="https://faucets.chain.link/sepolia" class="button" target="_blank">
+                🔗 Chainlink Faucet öffnen
+            </a>
+            <p><em>🔒 Sicher, mittlere Menge</em></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>🎯 Nach dem ETH-Erhalt</h2>
+        
+        <div class="step">
+            <h3>Schritt 4: Private Key exportieren</h3>
+            <p>1. MetaMask öffnen</p>
+            <p>2. Account-Menü → Account-Details → Private Key exportieren</p>
+            <p>3. Private Key kopieren (ohne 0x)</p>
+            <div class="warning">
+                <strong>⚠️ Warnung:</strong> Nur Test-Accounts verwenden! Niemals echtes Geld auf diesen Account senden!
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Schritt 5: Private Key in .env eintragen</h3>
+            <div class="code">
+                PRIVATE_KEY=dein_privater_schluessel_ohne_0x
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Schritt 6: ÆRA Token deployen!</h3>
+            <div class="code">
+                npm run deploy:sepolia
+            </div>
+            <p>🎉 Nach ~30 Sekunden hast du deinen ÆRA Token auf Sepolia!</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>💡 Tipps & Troubleshooting</h2>
+        
+        <div class="faucet-card">
+            <h3>❓ Faucet gibt kein ETH?</h3>
+            <ul>
+                <li>Versuche einen anderen Faucet</li>
+                <li>Warte 24h und versuche es erneut</li>
+                <li>Prüfe ob du bereits ETH erhalten hast</li>
+                <li>Verwende einen anderen Browser/Account</li>
+            </ul>
+        </div>
+
+        <div class="faucet-card">
+            <h3>🚀 Wie viel ETH brauche ich?</h3>
+            <ul>
+                <li><strong>Minimum:</strong> 0.03 ETH für Deployment</li>
+                <li><strong>Empfohlen:</strong> 0.1 ETH für Tests + Verifikation</li>
+                <li><strong>Optimal:</strong> 0.5 ETH für alle Experimente</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
