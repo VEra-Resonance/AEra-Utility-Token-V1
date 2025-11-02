@@ -123,7 +123,7 @@ All tokens circulating on testnets or in community drops are **test allocations*
 | **Contract (Sepolia)** | https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e |
 | **Source Code Repo** | https://github.com/koal0308/AEra |
 | **Documentation** | Check `/docs/` folder in repo |
-| **Telegram Bot** | @AEra_Official_Bot |
+| **Telegram Bot** | @AEra_Go_Live_bot |
 | **License** | MIT © 2025 AEra Collective |
 
 ---
