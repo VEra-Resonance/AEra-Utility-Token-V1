@@ -323,11 +323,16 @@ bot.onText(/\/roadmap(@AEra_Official_Bot)?/, (msg) => {
 🔲 Snapshot DAO testing
 
 *Phase 3 (2026 Q3):*
-🔲 Mainnet deployment
+🔲 Mainnet preparation & security finalization
 🔲 Liquidity framework
+🔲 Final audits & testing
+
+*Phase 4 (2026 Q4 - Earliest):* 🚀
+🔲 **Mainnet Deployment**
+🔲 Liquidity lock (community vote)
 🔲 Public availability
 
-*Phase 4 (2026 Q4+):*
+*Phase 5 (2026 Q4 → 2027):*
 🔲 VERA / PAXIS ecosystem integration
 🔲 AI-resonance metrics API
 🔲 Long-term governance evolution`;

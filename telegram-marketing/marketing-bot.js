@@ -580,39 +580,37 @@ bot.onText(/\/roadmap(@AEra_Official_Bot)?/, (msg) => {
     marketingStats.botCommands++;
     
     const roadmapMessage = `
-🗺️ <b>AERA Token Roadmap 2025-2027</b>
+🗺️ <b>AEra Development Roadmap</b>
 
-<b>✅ PHASE 1: Nov-Dec 2025 - Foundation & Marketing</b>
-• Build community (500+ members)
-• Optimize bot
-• Create website
-• Write whitepaper
-• Intensify marketing
+<b>✅ Phase 0 (2025 Q4): COMPLETE</b>
+✅ Smart contract deployed to Sepolia
+✅ Contract verified on Etherscan & Sourcify
+✅ Ownership transferred to Multi-Sig Safe
 
-<b>🛡️ PHASE 2: Jan-Mar 2026 - Security & Preparation</b>
-• Conduct Security Audit (2-10k€)
-• Intensive testing
-• Legal compliance
-• Goal: 2,000+ community members
+<b>� Phase 1 (2026 Q1): IN PROGRESS</b>
+🔲 Public test airdrop (EIP-4361 Sign-in)
+🔲 Community feedback collection
+🔲 Bot integration (governance testing)
 
-<b>💼 PHASE 3: Apr-Jun 2026 - Pre-Mainnet</b>
-• Final testnet tests
-• Prepare liquidity (10-50 ETH)
-• DEX/CEX partnerships
-• Goal: 5,000+ community members
+<b>Phase 2 (2026 Q2):</b>
+🔲 Security audit & final review
+🔲 Governance module integration
+🔲 Snapshot DAO testing
 
-<b>🌟 PHASE 4: Jul-Sep 2026 - Expansion & Testing</b>
-• Intensive mainnet testing
-• Governance preparation
-• Staking system development
-• Goal: 10,000+ community members
+<b>Phase 3 (2026 Q3):</b>
+🔲 Mainnet preparation & security finalization
+🔲 Liquidity framework
+🔲 Final audits & testing
 
-<b>🚀 PHASE 5: Q4 2026 - MAINNET LAUNCH 🎉</b>
-• Mainnet deployment (Live Trading!)
-• DEX listings (Uniswap, SushiSwap)
-• CEX listings
-• 1:1 Testnet → Mainnet token swap
-• Governance & staking activation
+<b>🚀 Phase 4 (2026 Q4 - Earliest):</b>
+🔲 <b>Mainnet Deployment</b>
+🔲 Liquidity lock (community vote)
+🔲 Public availability
+
+<b>Phase 5 (2026 Q4 → 2027):</b>
+🔲 VERA / PAXIS ecosystem integration
+🔲 AI-resonance metrics API
+🔲 Long-term governance evolution
 • Goal: 20,000+ community members
 
 <b>🌍 PHASE 6: 2027 - Scaling & Ecosystem</b>
