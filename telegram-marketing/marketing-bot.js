@@ -1682,6 +1682,74 @@ ${"═".repeat(40)}`;
     }
 });
 
+// /docs Command - ALL DOCUMENTATION LINKS
+bot.onText(/\/docs(@AEra_Official_Bot)?/, (msg) => {
+    const chatId = msg.chat.id;
+    marketingStats.botCommands++;
+    
+    console.log('📚 /docs requested');
+    
+    const docsMessage = `📚 *AEra Complete Documentation*
+
+*🔗 Central Hub:*
+https://github.com/koal0308/AEra/blob/master/DOCUMENTATION-INDEX.md
+
+*📄 Main Documents:*
+• White Paper: https://github.com/koal0308/AEra/blob/master/WHITEPAPER.md
+• Security Guarantee: https://github.com/koal0308/AEra/blob/master/SECURITY-GUARANTEE.md
+• Transparency Log: https://github.com/koal0308/AEra/blob/master/TRANSPARENCY-LOG.md
+• Deployment Checklist: https://github.com/koal0308/AEra/blob/master/DEPLOYMENT-CHECKLIST.md
+
+*🏗️ Architecture (Airdrop):*
+• Design (1500 lines): https://github.com/koal0308/AEra/blob/master/docs/AIRDROP-ARCHITECTURE.md
+• Roadmap (6 phases): https://github.com/koal0308/AEra/blob/master/docs/AIRDROP-ROADMAP.md
+• Quick Reference: https://github.com/koal0308/AEra/blob/master/docs/AIRDROP-QUICK-REFERENCE.md
+
+*🤖 Bot & Compliance:*
+• Minimal Bot: https://github.com/koal0308/AEra/blob/master/BOT-MINIMAL-SETUP.md
+• Bot Compliance: https://github.com/koal0308/AEra/blob/master/BOT-COMPLIANCE-GUIDE.md
+
+*📊 Statistics:*
+15+ Docs | 4000+ Lines | 2000+ LOC Bot | 500+ LOC Contract
+All Publicly Available on GitHub`;
+
+    bot.sendMessage(chatId, docsMessage, { parse_mode: 'Markdown', disable_web_page_preview: true });
+});
+
+// /verify Command - VERIFICATION LINKS
+bot.onText(/\/verify(@AEra_Official_Bot)?/, (msg) => {
+    const chatId = msg.chat.id;
+    marketingStats.botCommands++;
+    
+    console.log('✅ /verify requested');
+    
+    const verifyMessage = `✅ *Verification & On-Chain Links*
+
+*🔍 Smart Contract (Etherscan):*
+https://sepolia.etherscan.io/address/${AERA_TOKEN_ADDRESS}
+
+*👑 Ownership Transfer:*
+TX: 0xa0a1a525bc96a3b4c813fa363f7b7d20694ef6e28a1958e1d1c0264cf59c6c30
+Block: 9545535
+https://sepolia.etherscan.io/tx/0xa0a1a525bc96a3b4c813fa363f7b7d20694ef6e28a1958e1d1c0264cf59c6c30
+
+*🏛️ Multi-Sig Safe (2-of-3):*
+0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
+https://app.safe.global/home?safe=sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
+
+*✅ Sourcify Verification:*
+Match ID: 9753387 (Exact Match ✅)
+https://sourcify.dev/#/verify/${AERA_TOKEN_ADDRESS}?network=11155111
+
+*📊 Complete Verification Log:*
+https://github.com/koal0308/AEra/blob/master/TRANSPARENCY-LOG.md
+
+*🎯 Deployment Status (18/18 ✅):*
+https://github.com/koal0308/AEra/blob/master/DEPLOYMENT-CHECKLIST.md`;
+
+    bot.sendMessage(chatId, verifyMessage, { parse_mode: 'Markdown', disable_web_page_preview: true });
+});
+
 // ===================================
 // BOT STARTUP
 // ===================================
