@@ -1,5 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { Web3 } = require('web3');
+const path = require('path');
 require('dotenv').config();
 
 console.log('🚀 Starting AERA Token Telegram Bot (MINIMAL VERSION)...\n');
@@ -9,6 +10,22 @@ const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_USER_ID = process.env.ADMIN_USER_ID;
 const AERA_TOKEN_ADDRESS = process.env.AERA_TOKEN_ADDRESS;
 const RPC_URL = process.env.RPC_URL;
+
+// Logo Images Array
+const LOGO_IMAGES = [
+    'AEra-logo.png',
+    'AEra-logo-dark-backround.png',
+    'AEra-logo-human.png',
+    'AEra-logo-human-color.png',
+    'AEra-logo-sand.png',
+    'AEra-logo-sand-dark.png'
+];
+
+// Get random logo
+const getRandomLogo = () => {
+    const randomIndex = Math.floor(Math.random() * LOGO_IMAGES.length);
+    return path.join(__dirname, 'images', LOGO_IMAGES[randomIndex]);
+};
 
 if (!BOT_TOKEN || BOT_TOKEN === 'your_telegram_bot_token_here') {
     console.log('❌ Bot Token missing! Please configure .env');
@@ -80,9 +97,6 @@ bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     const userName = msg.from.first_name || 'there';
 
-    // Image URL (from URL or local path)
-    const imageUrl = 'https://raw.githubusercontent.com/koal0308/AEra/master/assets/images/aera-logo.png';
-
     const startMessage = `🌀 *Welcome to AEra Token* 🌀
 
 *The Resonant Standard for Transparent Technology*
@@ -109,7 +123,8 @@ AEra is an open-source ERC-20 token project exploring blockchain as a tool for c
 
 Stay curious. Stay resonant. 🌀`;
 
-    bot.sendPhoto(chatId, imageUrl, {
+    const logoPath = getRandomLogo();
+    bot.sendPhoto(chatId, logoPath, {
         caption: startMessage,
         parse_mode: 'Markdown'
     }).catch((err) => {
@@ -135,7 +150,13 @@ bot.onText(/\/help/, (msg) => {
 *Need more info?*
 Visit our GitHub: https://github.com/koal0308/AEra`;
 
-    bot.sendMessage(chatId, helpMessage, { parse_mode: 'Markdown' });
+    const logoPath = getRandomLogo();
+    bot.sendPhoto(chatId, logoPath, {
+        caption: helpMessage,
+        parse_mode: 'Markdown'
+    }).catch((err) => {
+        bot.sendMessage(chatId, helpMessage, { parse_mode: 'Markdown' });
+    });
 });
 
 // INFO Command
@@ -162,7 +183,13 @@ bot.onText(/\/info/, (msg) => {
 🔗 Sourcify: https://sourcify.dev/#/verify/0x5032206396A6001eEaD2e0178C763350C794F69e?network=11155111
 🔗 GitHub: https://github.com/koal0308/AEra`;
 
-    bot.sendMessage(chatId, infoMessage, { parse_mode: 'Markdown' });
+    const logoPath = getRandomLogo();
+    bot.sendPhoto(chatId, logoPath, {
+        caption: infoMessage,
+        parse_mode: 'Markdown'
+    }).catch((err) => {
+        bot.sendMessage(chatId, infoMessage, { parse_mode: 'Markdown' });
+    });
 });
 
 // SUPPLY Command
@@ -170,7 +197,13 @@ bot.onText(/\/supply/, async (msg) => {
     const chatId = msg.chat.id;
     
     if (!contractAvailable) {
-        bot.sendMessage(chatId, '⚠️ Blockchain data temporarily unavailable. Please try again later.');
+        const logoPath = getRandomLogo();
+        bot.sendPhoto(chatId, logoPath, {
+            caption: '⚠️ Blockchain data temporarily unavailable. Please try again later.',
+            parse_mode: 'Markdown'
+        }).catch(() => {
+            bot.sendMessage(chatId, '⚠️ Blockchain data temporarily unavailable. Please try again later.');
+        });
         return;
     }
 
@@ -195,9 +228,21 @@ bot.onText(/\/supply/, async (msg) => {
 • Burnable: Yes
 • Pausable: Yes`;
 
-        bot.sendMessage(chatId, supplyMessage, { parse_mode: 'Markdown' });
+        const logoPath = getRandomLogo();
+        bot.sendPhoto(chatId, logoPath, {
+            caption: supplyMessage,
+            parse_mode: 'Markdown'
+        }).catch((err) => {
+            bot.sendMessage(chatId, supplyMessage, { parse_mode: 'Markdown' });
+        });
     } catch (error) {
-        bot.sendMessage(chatId, '❌ Error fetching supply data. Please try again.');
+        const logoPath = getRandomLogo();
+        bot.sendPhoto(chatId, logoPath, {
+            caption: '❌ Error fetching supply data. Please try again.',
+            parse_mode: 'Markdown'
+        }).catch(() => {
+            bot.sendMessage(chatId, '❌ Error fetching supply data. Please try again.');
+        });
     }
 });
 
@@ -226,7 +271,13 @@ bot.onText(/\/verify/, (msg) => {
 \`0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93\`
 https://app.safe.global/home?safe=sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93`;
 
-    bot.sendMessage(chatId, verifyMessage, { parse_mode: 'Markdown' });
+    const logoPath = getRandomLogo();
+    bot.sendPhoto(chatId, logoPath, {
+        caption: verifyMessage,
+        parse_mode: 'Markdown'
+    }).catch((err) => {
+        bot.sendMessage(chatId, verifyMessage, { parse_mode: 'Markdown' });
+    });
 });
 
 // ROADMAP Command
@@ -266,7 +317,13 @@ Q4 2025
 🔲 VERA/PAXIS network bridge
 🔲 Long-term governance evolution`;
 
-    bot.sendMessage(chatId, roadmapMessage, { parse_mode: 'Markdown' });
+    const logoPath = getRandomLogo();
+    bot.sendPhoto(chatId, logoPath, {
+        caption: roadmapMessage,
+        parse_mode: 'Markdown'
+    }).catch((err) => {
+        bot.sendMessage(chatId, roadmapMessage, { parse_mode: 'Markdown' });
+    });
 });
 
 // SECURITY Command
@@ -305,7 +362,13 @@ bot.onText(/\/security/, (msg) => {
 All available on GitHub:
 https://github.com/koal0308/AEra`;
 
-    bot.sendMessage(chatId, securityMessage, { parse_mode: 'Markdown' });
+    const logoPath = getRandomLogo();
+    bot.sendPhoto(chatId, logoPath, {
+        caption: securityMessage,
+        parse_mode: 'Markdown'
+    }).catch((err) => {
+        bot.sendMessage(chatId, securityMessage, { parse_mode: 'Markdown' });
+    });
 });
 
 // CONTACT Command
@@ -331,7 +394,13 @@ bot.onText(/\/contact/, (msg) => {
 *Questions?*
 Visit our documentation or check the GitHub repository for complete information.`;
 
-    bot.sendMessage(chatId, contactMessage, { parse_mode: 'Markdown' });
+    const logoPath = getRandomLogo();
+    bot.sendPhoto(chatId, logoPath, {
+        caption: contactMessage,
+        parse_mode: 'Markdown'
+    }).catch((err) => {
+        bot.sendMessage(chatId, contactMessage, { parse_mode: 'Markdown' });
+    });
 });
 
 // Error Handler
