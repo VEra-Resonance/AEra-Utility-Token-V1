@@ -1,0 +1,25 @@
+[
+  {
+    "airdrop_id": "2025-11-02-7nbgnizoi",
+    "timestamp": "2025-11-02T17:50:05.690Z",
+    "user_id": 5122525349,
+    "username": "AEra_System",
+    "wallet": "pending",
+    "amount": 100,
+    "network": "sepolia",
+    "tx_hash": "pending",
+    "block": null,
+    "status": "confirmed",
+    "type": "welcome",
+    "consent": {
+      "agreed": true,
+      "timestamp": "2025-11-02T17:50:05.690Z"
+    },
+    "limits_check": {
+      "daily_used": 0,
+      "daily_limit": 3,
+      "wallet_claims": 0,
+      "passed": true
+    }
+  }
+]

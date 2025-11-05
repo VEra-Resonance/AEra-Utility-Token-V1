@@ -1,0 +1,130 @@
+🌀 Introducing AEra – The Resonant Standard (not another token)
+"In a world obsessed with price, we built something that measures alignment."
+
+Hey everyone 👋
+
+We've just open-sourced AEra Token — a verified, fully transparent ERC-20 contract on Ethereum (currently Sepolia Testnet) — designed not as a speculation vehicle, but as a resonance experiment:
+
+**Can digital systems reflect human integrity, precision, and collaboration instead of greed?**
+
+---
+
+## 🧭 What AEra Is
+
+**ERC-20 Verified on Etherscan:**
+- Contract: `0x5032206396A6001eEaD2e0178C763350C794F69e`
+- Network: Sepolia Testnet (Chain ID: 11155111)
+- Verification: ✅ Etherscan & Sourcify (Match ID: 9753387)
+- Link: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
+
+**Open Source on GitHub:**
+- Repository: https://github.com/koal0308/AEra
+- License: MIT © 2025 AEra Collective
+- Status: Public, fully documented, 44 files
+
+**Governance:**
+- Owner: Gnosis Safe Multi-Sig (2-of-3 required)
+- Safe Address: `0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93`
+- Ownership TX: https://sepolia.etherscan.io/tx/0xa0a1a525bc96a3b4c813fa363f7b7d20694ef6e28a1958e1d1c0264cf59c6c30
+
+**AEra's Tokenomics:**
+- Initial Supply: 100M AERA
+- Max Supply: 1B AERA (hard-coded limit)
+- Decimals: 18 (like ETH)
+- Features: Burnable, Pausable, Permit-enabled, ERC-20 compliant
+
+---
+
+## 🧩 Why We're Doing This
+
+Most tokens talk about value.
+We talk about **resonance** — the signal that emerges when technology, ethics, and clarity vibrate on the same frequency.
+
+AEra isn't trying to compete with coins. It's trying to create **trust without narrative manipulation.**
+
+---
+
+## 🚧 What Happens Next
+
+**Phase 0 (NOW):** ✅ COMPLETE
+- ✅ Smart contract deployed & verified on Sepolia
+- ✅ Multi-sig ownership transferred to Gnosis Safe (2-of-3)
+- ✅ Complete transparency documentation published
+
+**Phase 1 (Q1 2026):** 🔄 IN PROGRESS
+- 🔲 Public test airdrop (EIP-4361 Sign-in with Ethereum)
+- 🔲 Community feedback collection
+- 🔲 Bot integration for governance testing
+
+**Phase 2-6 (2026):** 📅 ROADMAP
+- Phase 2 (Q2): Security audit & governance integration
+- Phase 3 (Q3): Mainnet preparation & final audits
+- Phase 4 (Q4 - Earliest): **Mainnet Deployment** 🚀
+- Phase 5 (Q4 2026 → 2027): VERA/PAXIS ecosystem integration
+
+---
+
+## ⚙️ Transparency First
+
+Everything is public, auditable, and reproducible.
+
+**All Verification Data Published:**
+- Transaction Hashes: ✅ All on-chain verified
+- Security Architecture: ✅ 7-layer security model documented
+- Deployment Checklist: ✅ 18/18 Phase 0 tasks complete
+- Code Review: ✅ OpenZeppelin standards, fully tested
+
+**What You'll Find:**
+- ✅ No Discord pump room
+- ✅ No marketing agency
+- ✅ No hidden investors
+- ✅ Only open logs, verified code, and transparent governance
+
+---
+
+## 🔗 Links
+
+**Smart Contract:**
+- Etherscan (Sepolia): https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
+- Sourcify Verification: https://sourcify.dev/#/verify/0x5032206396A6001eEaD2e0178C763350C794F69e?network=11155111
+- Write Contract: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e#writeContract
+
+**Documentation:**
+- White Paper v1.0: https://github.com/koal0308/AEra/blob/master/WHITEPAPER.md
+- Airdrop Architecture: https://github.com/koal0308/AEra/blob/master/docs/AIRDROP-ARCHITECTURE.md
+- Security Guarantee: https://github.com/koal0308/AEra/blob/master/SECURITY-GUARANTEE.md
+- Complete Index: https://github.com/koal0308/AEra/blob/master/DOCUMENTATION-INDEX.md
+
+**Community:**
+- Telegram Bot: @AEra_Go_Live_bot (https://t.me/AEra_Go_Live_bot)
+- GitHub Repository: https://github.com/koal0308/AEra
+- Safe Governance: https://app.safe.global/home?safe=sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
+
+**Verification Links:**
+- Deployment Checklist: https://github.com/koal0308/AEra/blob/master/DEPLOYMENT-CHECKLIST.md
+- Transparency Log: https://github.com/koal0308/AEra/blob/master/TRANSPARENCY-LOG.md
+
+---
+
+## 🎯 What We Want From You
+
+If you've ever wanted to see a project built like an **engineering protocol**, not a hype train, this might interest you.
+
+**We're looking for:**
+- Code reviewers (security audits welcome)
+- Philosophical feedback (is our resonance model actually sound?)
+- Community builders (who believe in transparency first)
+- Developers (help us build the VERA bridge)
+
+---
+
+**AEra = Transparency × Resonance ÷ Speculation**
+
+✅ Open Source  
+✅ Multi-Sig Protected  
+✅ Fully Verified  
+✅ Community-Governed  
+
+Stay critical. Stay curious. Stay resonant.
+
+— The AEra Collective

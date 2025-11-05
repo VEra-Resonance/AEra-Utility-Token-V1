@@ -70,6 +70,11 @@ AEra is part of the wider **VERA / PAXIS ecosystem** — an initiative focused o
 - ✅ **Etherscan:** Verified & Published
 - ✅ **Sourcify:** Exact Match (ID: 9753387)
 - ✅ **Slither Analysis:** https://github.com/koal0308/AEra/blob/master/SLITHER-REPORT.md
+- ✅ **Multi-Sig Minting:** TESTED & VERIFIED ✅ (Nov 5, 2025)
+  - Test 1: 1 AERA minted (Block 9560611)
+  - Test 2: Debug iteration
+  - Test 3: 1 AERA minted (Block 9563594) — **SUCCESSFUL**
+  - **Final Balance: 2.0 AERA on-chain verified**
 - ✅ **Deployment Checklist:** 18/18 tasks complete
 
 ---
@@ -92,6 +97,10 @@ We see AEra as a prototype for trustable, verifiable digital value, forming the 
 **Timeline:** Q4 2025  
 - ✅ Smart contract deployed & verified on Sepolia
 - ✅ Multi-Sig Safe ownership transferred (2-of-3 governance)
+- ✅ **Multi-Sig Minting System tested & verified** (Nov 5, 2025)
+  - ✅ Safe 2-of-3 workflow functional
+  - ✅ Mint transactions confirmed on-chain
+  - ✅ 2 AERA successfully minted to test wallet
 - ✅ Complete transparency documentation published
 - ✅ Slither security analysis completed (0 critical issues)
 - ✅ Telegram bot operational (@AEra_Go_Live_bot)

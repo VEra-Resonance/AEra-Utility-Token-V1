@@ -69,6 +69,8 @@ Gehe zu: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350
 
 2. Fülle folgende Felder aus:
 
+   🔴 **KRITISCH:** Das `To`-Feld muss der **Token-Contract** sein (0x5032206396A6001eEaD2e0178C763350C794F69e), **NICHT die Safe-Adresse**! Sonst funktioniert das Minting nicht.
+
    **`to` (address):**
    ```
    0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266

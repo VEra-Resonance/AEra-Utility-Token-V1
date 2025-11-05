@@ -279,6 +279,95 @@ https://app.safe.global/home?safe=sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
 
 ---
 
+## 🪙 STEP 8: MULTI-SIG MINTING SYSTEM TEST & VERIFICATION
+
+### Multi-Sig Minting Overview
+| Field | Value |
+|-------|-------|
+| **System Type** | Gnosis Safe 2-of-3 Multi-Sig |
+| **Owner** | 0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93 |
+| **Status** | ✅ TESTED & VERIFIED |
+| **Mint Capability** | ✅ FUNCTIONAL |
+| **Security** | ✅ CRITICAL: "To" must be Token Contract, not Safe |
+
+### Mint Transaction #1 (Test 1 - Failed)
+| Detail | Value |
+|--------|-------|
+| **Transaction Hash** | `0x56088c4871fa5c35425d0ab126e9e9eaa8f9edbc7745eb50be5254e3e19844f7` |
+| **Block Number** | 9560611 |
+| **Timestamp** | Nov-05-2025 03:52:24 PM UTC (9 hours ago) |
+| **Status** | ⚠️ PARTIAL (Nonce: 0, only 1 confirmation) |
+| **Amount** | 1 AERA (1000000000000000000 Wei) |
+| **Recipient** | 0x4dD63dABcc384F2a7B14cC4DB3a59A408fe69F73 |
+| **Issue** | Safe "To" field was Safe address instead of Token Contract |
+| **Gas Used** | ~57,645 gas |
+| **Etherscan Link** | https://sepolia.etherscan.io/tx/0x56088c4871fa5c35425d0ab126e9e9eaa8f9edbc7745eb50be5254e3e19844f7 |
+
+### Mint Transaction #2 (Test 2 - Failed)
+| Detail | Value |
+|--------|-------|
+| **Transaction Hash** | `0x1379052521194df6181e86b2ac46aaa21885b5a006b68d432446e5be4600d47e` |
+| **Block Number** | 9563480 |
+| **Timestamp** | Nov-05-2025 04:29:12 PM UTC (15 minutes ago) |
+| **Status** | ❌ FAILED (Same "To" issue) |
+| **Analysis** | Safe executed, but no Transfer event → Mint did not execute |
+| **Root Cause** | Safe was misconfigured: "To" field = Safe address instead of Token Contract |
+| **Etherscan Link** | https://sepolia.etherscan.io/tx/0x1379052521194df6181e86b2ac46aaa21885b5a006b68d432446e5be4600d47e |
+
+### Mint Transaction #3 (Test 3 - SUCCESS ✅)
+| Detail | Value |
+|-------|-------|
+| **Transaction Hash** | `0x2ca063462986f02881f68fc136aa706a7252f388eaf450e97f5047d0aa523656` |
+| **Block Number** | 9563594 |
+| **Timestamp** | Nov-05-2025 04:37:48 AM UTC (8 mins ago) |
+| **Status** | ✅ SUCCESS |
+| **Amount** | 1 AERA (1000000000000000000 Wei) |
+| **Recipient** | 0x4dD63dABcc384F2a7B14cC4DB3a59A408fe69F73 |
+| **Safe Nonce** | 2 (3rd transaction) |
+| **Fix Applied** | "To" field = Token Contract (0x5032206396A6001eEaD2e0178C763350C794F69e) ✅ |
+| **Signatures** | 2-of-3 Multi-Sig confirmed ✅ |
+| **Transfer Event** | ✅ YES - 1 AERA transferred from 0x0 to 0x4dD63dABcc384F2a7B14cC4DB3a59A408fe69F73 |
+| **Gas Used** | 85,654 gas |
+| **Gas Price** | 1.5 Gwei (EIP-1559) |
+| **Txn Fee** | 0.000128481 ETH |
+| **Etherscan Link** | https://sepolia.etherscan.io/tx/0x2ca063462986f02881f68fc136aa706a7252f388eaf450e97f5047d0aa523656 |
+
+### Final Balance Verification
+| Detail | Value |
+|--------|-------|
+| **Wallet Address** | 0x4dD63dABcc384F2a7B14cC4DB3a59A408fe69F73 |
+| **Balance (On-Chain)** | 2.0 AERA ✅ |
+| **Total Supply** | 100,000,001.0 AERA |
+| **Verification Method** | Hardhat contract call (check-balance-now.js) |
+| **Verification Date** | Nov-05-2025 04:45:00 UTC |
+
+### Critical Lesson Learned
+🔴 **IMPORTANT:** The Safe "To" field must be the **Token Contract Address**, NOT the Safe itself!
+
+**Correct:**
+```
+To: 0x5032206396A6001eEaD2e0178C763350C794F69e  (Token Contract) ✅
+```
+
+**Wrong (caused test 1 & 2 to fail):**
+```
+To: 0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93  (Safe Address) ❌
+```
+
+This lesson has been documented in MINT-GUIDE.md to prevent community errors.
+
+### Multi-Sig Workflow Verification
+```
+✅ Step 1: TX submitted to Safe (shows in pending)
+✅ Step 2: Signer 1 approves (1/2)
+✅ Step 3: Signer 2 approves (2/2) → TX Executed!
+✅ Step 4: TX confirmed on blockchain
+✅ Step 5: Transfer event logged
+✅ Step 6: Balance updated in wallet
+```
+
+---
+
 ## 🔐 VERIFICATION CHECKLIST
 
 ### Smart Contract
