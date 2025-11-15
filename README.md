@@ -23,7 +23,7 @@ AEra is part of the wider **VERA / PAXIS ecosystem** — an initiative focused o
 
 ### 🔗 Quick Links
 - **Etherscan:** https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
-- **Sourcify:** [https://sourcify.dev/#/verify/0x5032206396A6001eEaD2e0178C763350C794F69e?network=11155111](https://repo.sourcify.dev/contracts/fullmatch/11155111/0x5032206396A6001eEaD2e0178C763350C794F69e/)
+- **Sourcify:** [[https://sourcify.dev/#/verify/0x5032206396A6001eEaD2e0178C763350C794F69e?network=11155111]
 - **Write Contract:** https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e#writeContract
 
 ---
