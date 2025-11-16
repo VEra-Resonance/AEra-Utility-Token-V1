@@ -161,18 +161,18 @@ bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     const userName = msg.from.first_name || 'there';
 
-    const startMessage = `🌀 *WELCOME TO AERA TOKEN* 🌀
+    const startMessage = `🌀 WELCOME TO AERA TOKEN 🌀
 
-*The Resonant Standard for Transparent Technology*
+The Resonant Standard for Transparent Technology
 
 Hello ${userName}! 
 
 AEra is an open-source ERC-20 token project exploring blockchain as a tool for clarity, integrity, and collaboration.
 
-📊 *QUICK LINKS*
-🔗 Contract: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
-📖 GitHub: https://github.com/koal0308/AEra
-✅ Verification: https://repo.sourcify.dev/contracts/full_match/11155111/0x5032206396A6001eEaD2e0178C763350C794F69e/
+QUICK LINKS
+Contract: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
+GitHub: https://github.com/koal0308/AEra
+Verification: https://repo.sourcify.dev/contracts/full_match/11155111/0x5032206396A6001eEaD2e0178C763350C794F69e/
 
 "In a world obsessed with price, we built something that measures alignment."
 
@@ -199,13 +199,11 @@ Stay curious. Stay resonant. 🌀`;
     const logoPath = getRandomLogo();
     bot.sendPhoto(chatId, logoPath, {
         caption: startMessage,
-        parse_mode: 'Markdown',
         reply_markup: inlineKeyboard
     }).catch((err) => {
-        console.log('⚠️  Photo error, sende Fallback:', err.message.substring(0, 50));
+        console.log('⚠️  Photo error, sending fallback:', err.message.substring(0, 50));
         // Fallback if image fails - still show keyboard
         bot.sendMessage(chatId, startMessage, { 
-            parse_mode: 'Markdown',
             reply_markup: inlineKeyboard 
         });
     });
