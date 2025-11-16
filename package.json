@@ -4,14 +4,18 @@
   "description": "ÆRA Token - ERC-20 Token auf der Ethereum Blockchain",
   "main": "index.js",
   "scripts": {
+    "start": "cd telegram-marketing && node marketing-bot.js",
     "compile": "hardhat compile",
     "test": "hardhat test",
     "deploy:localhost": "hardhat run scripts/deploy.js --network localhost",
     "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
     "deploy:mainnet": "hardhat run scripts/deploy.js --network mainnet",
     "verify:sepolia": "hardhat run scripts/verify-etherscan.js --network sepolia",
-    "verify:mainnet": "hardhat run scripts/verify-etherscan.js --network mainnet",
-    "encode:args": "hardhat run scripts/encode-constructor-args.js"
+    "verify:mainnet": "hardhat run scripts/verify-mainnet.js --network mainnet",
+    "encode:args": "hardhat run scripts/encode-constructor-args.js",
+    "bot:start": "cd telegram-marketing && node marketing-bot.js",
+    "bot:dev": "cd telegram-marketing && nodemon marketing-bot.js",
+    "bot:stop": "killall node"
   },
   "keywords": [
     "ethereum",
