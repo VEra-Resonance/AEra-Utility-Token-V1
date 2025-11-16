@@ -207,6 +207,7 @@ All transactions, parameters, and updates are logged on-chain and documented in 
 | **Transparency Log** | [docs/TRANSPARENCY-LOG.md](./docs/TRANSPARENCY-LOG.md) | All TX hashes & verification IDs |
 | **Deployment Checklist** | [docs/DEPLOYMENT-CHECKLIST.md](./docs/DEPLOYMENT-CHECKLIST.md) | Phase 0 completion evidence |
 | **Slither Report** | [docs/SLITHER-REPORT.md](./docs/SLITHER-REPORT.md) | Static security analysis |
+| **Bot Onboarding Guide** | [docs/BOT-ONBOARDING-GUIDE.md](./docs/BOT-ONBOARDING-GUIDE.md) | Step-by-step registration & Web3 wallet setup |
 | **Airdrop Architecture** | [docs/AIRDROP-ARCHITECTURE.md](./docs/AIRDROP-ARCHITECTURE.md) | Airdrop system design |
 | **VERA Architecture** | [docs/VERA-ARCHITECTURE.md](./docs/VERA-ARCHITECTURE.md) | Verifiable Resonant Architecture — local AI system |
 | **Bibliography** | [docs/BIBLIOGRAPHY.md](./docs/BIBLIOGRAPHY.md) | Recommended reading on resonance, biophotons, consciousness |
