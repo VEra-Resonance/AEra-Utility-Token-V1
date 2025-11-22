@@ -1,0 +1,48 @@
+[
+  {
+    "id": 1,
+    "title": "How should AI and humans co-create in the age of AEra? 🤖✨",
+    "description": "AEra Resonant Community Poll",
+    "options": [
+      {
+        "id": 0,
+        "text": "AI as true partners - equal collaboration",
+        "votes": 1,
+        "voters": [
+          5122525349
+        ]
+      },
+      {
+        "id": 1,
+        "text": "Humans guide, AI serves - hierarchical",
+        "votes": 0,
+        "voters": []
+      },
+      {
+        "id": 2,
+        "text": "Hybrid model - different roles for each",
+        "votes": 0,
+        "voters": []
+      },
+      {
+        "id": 3,
+        "text": "AI should focus on efficiency only",
+        "votes": 0,
+        "voters": []
+      },
+      {
+        "id": 4,
+        "text": "Need more time to decide",
+        "votes": 0,
+        "voters": []
+      }
+    ],
+    "createdAt": 1763316998359,
+    "endsAt": 1763576198359,
+    "active": false,
+    "totalVotes": 1,
+    "voters": [
+      "5122525349"
+    ]
+  }
+]

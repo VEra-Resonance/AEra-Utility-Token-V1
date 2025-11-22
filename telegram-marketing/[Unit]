@@ -1,0 +1,16 @@
+[Unit]
+Description=AEra Telegram Bot (Complete Version)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/karlheinz/krypto/aera-token/telegram-marketing
+ExecStart=/usr/bin/node /home/karlheinz/krypto/aera-token/telegram-marketing/marketing-bot-complete.js
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/aera-bot.log
+StandardError=append:/var/log/aera-bot-error.log
+
+[Install]
+WantedBy=multi-user.target

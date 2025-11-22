@@ -28,7 +28,16 @@ const RPC_URL = process.env.RPC_URL;
 const ADMIN_WALLET = process.env.ADMIN_WALLET;
 const ADMIN_PRIVATE_KEY = process.env.ADMIN_PRIVATE_KEY;
 
-const bot = new TelegramBot(BOT_TOKEN, { polling: true });
+const bot = new TelegramBot(BOT_TOKEN, { 
+    polling: {
+        interval: 300,
+        autoStart: true,
+        params: {
+            timeout: 10,
+            allowed_updates: ['message', 'callback_query']
+        }
+    }
+});
 
 // Web3 Setup
 let web3;
@@ -141,6 +150,9 @@ const getRandomLogo = () => {
     return path.join(__dirname, 'images', LOGO_IMAGES[randomIndex]);
 };
 
+// Track active connection attempts to prevent duplicates
+const activeConnections = new Map();
+
 if (!BOT_TOKEN || BOT_TOKEN === 'your_telegram_bot_token_here') {
     console.log('❌ Bot Token missing! Please configure .env');
     process.exit(1);
@@ -228,26 +240,26 @@ bot.on('callback_query', (query) => {
     } else if (data === 'menu_polls') {
         responseText = `📊 STANDARD POLLS\n\n` +
             `/polls - Alle aktiven Pollen\n` +
-            `/poll <id> - Poll details\n` +
-            `/vote <id> <option> - Abstimmen (min. 0.5 AERA)\n` +
-            `/closepoll <id> - Poll stoppen (Admin)\n` +
-            `/results <id> - Results anzeigen`;
+            `/poll &lt;id&gt; - Poll details\n` +
+            `/vote &lt;id&gt; &lt;option&gt; - Abstimmen (min. 0.5 AERA)\n` +
+            `/closepoll &lt;id&gt; - Poll stoppen (Admin)\n` +
+            `/results &lt;id&gt; - Results anzeigen`;
         keyboard.inline_keyboard = [
             [{ text: '🔄 Back', callback_data: 'menu_back' }]
         ];
     } else if (data === 'menu_weighted') {
         responseText = `⚖️ WEIGHTED POLLS\n\n` +
             `/wpolls - View all weighted polls\n` +
-            `/wpoll <id> - Poll details\n` +
-            `/wvote <id> <option> - Vote with token weight`;
+            `/wpoll &lt;id&gt; - Poll details\n` +
+            `/wvote &lt;id&gt; &lt;option&gt; - Vote with token weight`;
         keyboard.inline_keyboard = [
             [{ text: '🔄 Back', callback_data: 'menu_back' }]
         ];
     } else if (data === 'menu_archive') {
         responseText = `📦 ARCHIVE & STATISTICS\n\n` +
             `/archive - Archivede Pollen\n` +
-            `/archived <id> - Details of archived Poll\n` +
-            `/stats - Statistics & Auswertungen`;
+            `/archived &lt;id&gt; - Details of archived Poll\n` +
+            `/stats - Statistics &amp; Auswertungen`;
         keyboard.inline_keyboard = [
             [{ text: '🔄 Back', callback_data: 'menu_back' }]
         ];
@@ -257,8 +269,8 @@ bot.on('callback_query', (query) => {
             `/supply - Aktuelle Token-Supply\n` +
             `/verify - Verifikations-Details\n` +
             `/roadmap - Projekt-Roadmap\n` +
-            `/security - Security & Audit Status\n` +
-            `/contact - Help & Support`;
+            `/security - Security &amp; Audit Status\n` +
+            `/contact - Help &amp; Support`;
         keyboard.inline_keyboard = [
             [{ text: '🔄 Back', callback_data: 'menu_back' }]
         ];
@@ -270,17 +282,17 @@ bot.on('callback_query', (query) => {
             `/disconnect - Trennen\n\n` +
             `📊 Standard Polls:\n` +
             `/polls - Alle sehen\n` +
-            `/poll <id> - Details\n` +
-            `/vote <id> <opt> - Abstimmen\n` +
-            `/closepoll <id> - Stoppen (Admin)\n` +
-            `/results <id> - Results\n\n` +
+            `/poll &lt;id&gt; - Details\n` +
+            `/vote &lt;id&gt; &lt;opt&gt; - Abstimmen\n` +
+            `/closepoll &lt;id&gt; - Stoppen (Admin)\n` +
+            `/results &lt;id&gt; - Results\n\n` +
             `⚖️ Weighted Polls:\n` +
             `/wpolls - Alle sehen\n` +
-            `/wpoll <id> - Details\n` +
-            `/wvote <id> <opt> - Abstimmen\n\n` +
-            `📦 Archive & Reports:\n` +
+            `/wpoll &lt;id&gt; - Details\n` +
+            `/wvote &lt;id&gt; &lt;opt&gt; - Abstimmen\n\n` +
+            `📦 Archive &amp; Reports:\n` +
             `/archive - Archivede\n` +
-            `/archived <id> - Details\n` +
+            `/archived &lt;id&gt; - Details\n` +
             `/stats - Statistics\n\n` +
             `ℹ️ Info:\n` +
             `/info - Contract info\n` +
@@ -289,17 +301,17 @@ bot.on('callback_query', (query) => {
             `/roadmap - Roadmap\n` +
             `/security - Security\n` +
             `/contact - Support`, { 
-                parse_mode: 'Markdown',
+                parse_mode: 'HTML',
                 reply_markup: { inline_keyboard: [[{ text: '🔄 Back', callback_data: 'menu_back' }]] }
             });
         bot.answerCallbackQuery(query.id);
         return;
     } else if (data === 'menu_back') {
         // Return to main start screen
-        const mainMessage = `🌀 *WELCOME TO AERA TOKEN* 🌀\n\n` +
-            `*The Resonant Standard for Transparent Technology*\n\n` +
+        const mainMessage = `🌀 <b>WELCOME TO AERA TOKEN</b> 🌀\n\n` +
+            `<b>The Resonant Standard for Transparent Technology</b>\n\n` +
             `AEra is an open-source ERC-20 token project exploring blockchain as a tool for clarity, integrity, and collaboration.\n\n` +
-            `📊 *QUICK LINKS*\n` +
+            `📊 <b>QUICK LINKS</b>\n` +
             `🔗 Contract: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e\n` +
             `📖 GitHub: https://github.com/koal0308/AEra\n` +
             `✅ Verification: https://sourcify.dev/\n\n` +
@@ -323,7 +335,7 @@ bot.on('callback_query', (query) => {
         };
 
         bot.sendMessage(chatId, mainMessage, { 
-            parse_mode: 'Markdown',
+            parse_mode: 'HTML',
             reply_markup: mainKeyboard 
         });
         bot.answerCallbackQuery(query.id);
@@ -332,7 +344,7 @@ bot.on('callback_query', (query) => {
 
     if (responseText) {
         bot.sendMessage(chatId, responseText, { 
-            parse_mode: 'Markdown',
+            parse_mode: 'HTML',
             reply_markup: keyboard 
         });
     }
@@ -344,31 +356,31 @@ bot.on('callback_query', (query) => {
 bot.onText(/\/help/, (msg) => {
     const chatId = msg.chat.id;
 
-    const helpMessage = `🤖 *AEra Bot - Alle Commands*
+    const helpMessage = `🤖 <b>AEra Bot - Alle Commands</b>
 
-**Wallet:**
+<b>Wallet:</b>
 /connect - Wallet verbinden
 /wallet - Status checken
 /disconnect - Trennen
 
-**Standard Polls:**
+<b>Standard Polls:</b>
 /polls - Alle sehen
-/poll <id> - Details
-/vote <id> <opt> - Abstimmen
-/closepoll <id> - Stoppen (Admin)
-/results <id> - Results
+/poll &lt;id&gt; - Details
+/vote &lt;id&gt; &lt;opt&gt; - Abstimmen
+/closepoll &lt;id&gt; - Stoppen (Admin)
+/results &lt;id&gt; - Results
 
-**Weighted Polls:**
+<b>Weighted Polls:</b>
 /wpolls - Alle sehen
-/wpoll <id> - Details
-/wvote <id> <opt> - Abstimmen
+/wpoll &lt;id&gt; - Details
+/wvote &lt;id&gt; &lt;opt&gt; - Abstimmen
 
-**Archive & Reports:**
+<b>Archive &amp; Reports:</b>
 /archive - Archivede
-/archived <id> - Details
+/archived &lt;id&gt; - Details
 /stats - Statistics
 
-**Info:**
+<b>Info:</b>
 /start - Welcome
 /info - Contract info
 /supply - Token supply
@@ -380,43 +392,56 @@ bot.onText(/\/help/, (msg) => {
     const logoPath = getRandomLogo();
     bot.sendPhoto(chatId, logoPath, {
         caption: helpMessage,
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
     }).catch(() => {
-        bot.sendMessage(chatId, helpMessage, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, helpMessage, { parse_mode: 'HTML' });
     });
 });
 
 // INFO Command
 bot.onText(/\/info/, (msg) => {
     const chatId = msg.chat.id;
+    console.log(`📨 /info command received from user ${msg.from.id}`);
     
-    const infoMessage = `📊 *AEra Token - Contract information*
+    const infoMessage = `📊 <b>AEra Token - Contract Information</b>
 
-*Network:* Ethereum Sepolia Testnet (Chain ID: 11155111)
-*Contract:* \`0x5032206396A6001eEaD2e0178C763350C794F69e\`
-*Symbol:* AERA
-*Decimals:* 18
-*Owner:* Gnosis Safe 2-of-3 Multi-Sig
-*Status:* ✅ Verified on Etherscan & Sourcify
+<b>Network:</b> Ethereum Sepolia Testnet (Chain ID: 11155111)
+<b>Contract:</b> <code>0x5032206396A6001eEaD2e0178C763350C794F69e</code>
+<b>Symbol:</b> AERA
+<b>Decimals:</b> 18
+<b>Owner:</b> Gnosis Safe 2-of-3 Multi-Sig
+<b>Status:</b> ✅ Verified on Etherscan &amp; Sourcify
 
-*Standards:*
+<b>Standards:</b>
 ✅ ERC-20 (Full compliance)
 ✅ ERC-2612 (Permit mechanism)
 ✅ Burnable (Supply adjustment)
 ✅ Pausable (Emergency control)
 
-*Links:*
-🔗 Etherscan: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
-🔗 GitHub: https://github.com/koal0308/AEra
-🔗 Sourcify: https://repo.sourcify.dev/contracts/full_match/11155111/0x5032206396A6001eEaD2e0178C763350C794F69e`;
+<b>Links:</b>
+🔗 <a href="https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e">Etherscan</a>
+🔗 <a href="https://github.com/koal0308/AEra">GitHub</a>
+🔗 <a href="https://repo.sourcify.dev/contracts/full_match/11155111/0x5032206396A6001eEaD2e0178C763350C794F69e">Sourcify</a>`;
 
-    const logoPath = getRandomLogo();  // ✅ HINZUGEFÜGT
-    bot.sendPhoto(chatId, logoPath, {
-        caption: infoMessage,
-        parse_mode: 'Markdown'
-    }).catch((err) => {
-        bot.sendMessage(chatId, infoMessage, { parse_mode: 'Markdown' });
-    });
+    try {
+        console.log(`🖼️ Sending info with photo...`);
+        const logoPath = getRandomLogo();
+        bot.sendPhoto(chatId, logoPath, {
+            caption: infoMessage,
+            parse_mode: 'HTML'
+        }).then(() => {
+            console.log(`✅ /info photo sent successfully`);
+        }).catch((err) => {
+            console.warn(`⚠️ Photo send failed: ${err.message}, falling back to text`);
+            bot.sendMessage(chatId, infoMessage, { parse_mode: 'HTML' })
+                .then(() => console.log(`✅ /info text sent as fallback`))
+                .catch(e => console.error(`❌ /info text also failed: ${e.message}`));
+        });
+    } catch (error) {
+        console.error(`❌ /info error: ${error.message}`);
+        bot.sendMessage(chatId, infoMessage, { parse_mode: 'HTML' })
+            .catch(e => console.error(`❌ /info fallback failed: ${e.message}`));
+    }
 });
 
 // SUPPLY Command
@@ -427,7 +452,7 @@ bot.onText(/\/supply/, async (msg) => {
         const logoPath = getRandomLogo();  // ✅ HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: '⚠️ Blockchain data temporarily unavailable. Please try again later.',
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch(() => {
             bot.sendMessage(chatId, '⚠️ Blockchain data temporarily unavailable. Please try again later.');
         });
@@ -442,13 +467,13 @@ bot.onText(/\/supply/, async (msg) => {
         const totalSupplyFormatted = (BigInt(totalSupply) / BigInt(10**18)).toString();
         const maxSupplyFormatted = (BigInt(maxSupply) / BigInt(10**18)).toString();
 
-        const supplyMessage = `📈 *AEra Token supply*
+        const supplyMessage = `📈 <b>AEra Token supply</b>
 
-*Current Supply:* ${totalSupplyFormatted} AERA
-*Max Supply:* ${maxSupplyFormatted} AERA
-*Supply %:* ${((BigInt(totalSupply) / BigInt(maxSupply)) * 100n).toString()}%
+<b>Current Supply:</b> ${totalSupplyFormatted} AERA
+<b>Max Supply:</b> ${maxSupplyFormatted} AERA
+<b>Supply %:</b> ${((BigInt(totalSupply) / BigInt(maxSupply)) * 100n).toString()}%
 
-*Tokenomics:*
+<b>Tokenomics:</b>
 • Initial Supply: 100,000,000 AERA
 • Maximum Supply: 1,000,000,000 AERA
 • Governance: 2-of-3 Multi-Sig Safe
@@ -458,15 +483,15 @@ bot.onText(/\/supply/, async (msg) => {
         const logoPath = getRandomLogo();  // ✅ HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: supplyMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, supplyMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, supplyMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         const logoPath = getRandomLogo();  // ✅ HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: '❌ Error fetching supply data. Please try again.',
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch(() => {
             bot.sendMessage(chatId, '❌ Error fetching supply data. Please try again.');
         });
@@ -477,36 +502,36 @@ bot.onText(/\/supply/, async (msg) => {
 bot.onText(/\/verify/, (msg) => {
     const chatId = msg.chat.id;
     
-    const verifyMessage = `✅ *AEra Token - Verification Status*
+    const verifyMessage = `✅ <b>AEra Token - Verification Status</b>
 
-*On-Chain Verification:*
+<b>On-Chain Verification:</b>
 ✅ Etherscan: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e#code
 ✅ Sourcify: https://repo.sourcify.dev/contracts/full_match/11155111/0x5032206396A6001eEaD2e0178C763350C794F69e/
 
-*Security Analysis:*
+<b>Security Analysis:</b>
 ✅ Slither Analysis: Local analysis (0 critical issues)
 ✅ OpenZeppelin v5.0.0 (Audited libraries)
 ✅ Zero Critical Issues
 
-*Transparency:*
+<b>Transparency:</b>
 ✅ Full source code on GitHub
 ✅ Multi-Sig governance active
 ✅ All deployments documented
 ✅ Public verification trail
 
-*Safe Address:*
-\`0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93\`
+<b>Safe Address:</b>
+<code>0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93</code>
 🔗 Gnosis Safe: https://app.safe.global/sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
 
-*GitHub Repository:*
+<b>GitHub Repository:</b>
 https://github.com/koal0308/AEra`;
 
     const logoPath = getRandomLogo();  // ✅ HINZUGEFÜGT
     bot.sendPhoto(chatId, logoPath, {
         caption: verifyMessage,
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
     }).catch((err) => {
-        bot.sendMessage(chatId, verifyMessage, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, verifyMessage, { parse_mode: 'HTML' });
     });
 });
 
@@ -514,45 +539,45 @@ https://github.com/koal0308/AEra`;
 bot.onText(/\/roadmap/, (msg) => {
     const chatId = msg.chat.id;
     
-    const roadmapMessage = `🚀 *AEra Token - Roadmap*
+    const roadmapMessage = `🚀 <b>AEra Token - Roadmap</b>
 
-*Phase 0 - Foundation* ✅ COMPLETE
+<b>Phase 0 - Foundation</b> ✅ COMPLETE
 Q4 2025
-✅ Smart contract deployed & verified
+✅ Smart contract deployed &amp; verified
 ✅ Multi-Sig governance active
 ✅ Slither security analysis (0 critical issues)
 ✅ Telegram bot operational
 
-*Phase 1 - Community Test & Airdrop* 🔄 Q1 2026
+<b>Phase 1 - Community Test &amp; Airdrop</b> 🔄 Q1 2026
 🔲 Public test airdrop (Sign-in with Ethereum)
 🔲 Community feedback collection
 🔲 Backend API development
 
-*Phase 2 - Security & Governance* 📅 Q2 2026
+<b>Phase 2 - Security &amp; Governance</b> 📅 Q2 2026
 🔲 Professional security audit
 🔲 Governance module integration
 🔲 Snapshot DAO setup
 
-*Phase 3 - Mainnet Preparation* 📅 Q3 2026
+<b>Phase 3 - Mainnet Preparation</b> 📅 Q3 2026
 🔲 Mainnet infrastructure setup
 🔲 Liquidity framework design
 🔲 Final security testing
 
-*Phase 4 - Mainnet Deployment* 🚀 Q4 2026 (Earliest)
+<b>Phase 4 - Mainnet Deployment</b> 🚀 Q4 2026 (Earliest)
 🔲 Mainnet Launch
 🔲 DEX/CEX listings
 🔲 1:1 token swap
 
-*Phase 5 - Ecosystem Integration* 📅 2027
+<b>Phase 5 - Ecosystem Integration</b> 📅 2027
 🔲 VERA/PAXIS network bridge
 🔲 Long-term governance evolution`;
 
     const logoPath = getRandomLogo();  // ✅ HINZUGEFÜGT
     bot.sendPhoto(chatId, logoPath, {
         caption: roadmapMessage,
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
     }).catch((err) => {
-        bot.sendMessage(chatId, roadmapMessage, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, roadmapMessage, { parse_mode: 'HTML' });
     });
 });
 
@@ -560,39 +585,39 @@ Q4 2025
 bot.onText(/\/security/, (msg) => {
     const chatId = msg.chat.id;
     
-    const securityMessage = `🔒 *AEra Token - Security Guarantee*
+    const securityMessage = `🔒 <b>AEra Token - Security Guarantee</b>
 
-*Code Security:*
+<b>Code Security:</b>
 ✅ OpenZeppelin v5.0.0 (Industry standard)
 ✅ Solidity 0.8.20 (Latest security features)
 ✅ 100% public, auditable source code
 ✅ Slither static analysis (0 critical issues)
 
-*Governance Security:*
+<b>Governance Security:</b>
 ✅ 2-of-3 Gnosis Safe Multi-Sig
-✅ All transactions on-chain & public
+✅ All transactions on-chain &amp; public
 ✅ No private keys in repository
 ✅ Transparent ownership transfer logs
 
-*Features:*
+<b>Features:</b>
 ✅ Burnable: Reduce supply if needed
 ✅ Pausable: Emergency transfer control
 ✅ Permit (EIP-2612): Gasless approvals
 ✅ MAX_SUPPLY hard-coded: 1B AERA
 
-*Documentation:*
-📖 GitHub: https://github.com/koal0308/AEra
-📊 Etherscan: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
+<b>Documentation:</b>
+📖 <a href="https://github.com/koal0308/AEra">GitHub</a>
+📊 <a href="https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e">Etherscan</a>
 
-*Professional Audit:*
+<b>Professional Audit:</b>
 🔲 Planned for Phase 2 (Q2 2026)`;
 
-    const logoPath = getRandomLogo();  // ✅ HINZUGEFÜGT
+    const logoPath = getRandomLogo();
     bot.sendPhoto(chatId, logoPath, {
         caption: securityMessage,
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
     }).catch((err) => {
-        bot.sendMessage(chatId, securityMessage, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, securityMessage, { parse_mode: 'HTML' });
     });
 });
 
@@ -600,33 +625,33 @@ bot.onText(/\/security/, (msg) => {
 bot.onText(/\/contact/, (msg) => {
     const chatId = msg.chat.id;
     
-    const contactMessage = `📞 *AEra Token - Contact & Support*
+    const contactMessage = `📞 <b>AEra Token - Contact &amp; Support</b>
 
-*Community:*
+<b>Community:</b>
 💬 Telegram: https://t.me/AEra_Go_Live_bot
 🐙 GitHub: https://github.com/koal0308/AEra
 🔗 Safe: https://app.safe.global/sep:0xC8B1bEb43361bb78400071129139A37Eb5c5Dd93
 
-*Contract Links:*
+<b>Contract Links:</b>
 🔗 Etherscan: https://sepolia.etherscan.io/address/0x5032206396A6001eEaD2e0178C763350C794F69e
 📋 Sourcify: https://repo.sourcify.dev/contracts/full_match/11155111/0x5032206396A6001eEaD2e0178C763350C794F69e/
 
-*Quick Reference:*
+<b>Quick Reference:</b>
 • Network: Ethereum Sepolia (Chain ID 11155111)
 • Contract: 0x5032206396A6001eEaD2e0178C763350C794F69e
 • Symbol: AERA
 • Max Supply: 1,000,000,000 AERA
 
-*Questions?*
+<b>Questions?</b>
 Visit our GitHub repository for complete documentation:
 https://github.com/koal0308/AEra`;
 
     const logoPath = getRandomLogo();  // ✅ HINZUGEFÜGT
     bot.sendPhoto(chatId, logoPath, {
         caption: contactMessage,
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
     }).catch((err) => {
-        bot.sendMessage(chatId, contactMessage, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, contactMessage, { parse_mode: 'HTML' });
     });
 });
 
@@ -638,30 +663,45 @@ bot.onText(/\/connect/, async (msg) => {
     const chatId = msg.chat.id;
     const userId = msg.from.id;
 
+    // Prevent duplicate connection attempts
+    if (activeConnections.has(userId)) {
+        await bot.sendMessage(chatId, '⏳ Connection already in progress. Please wait or scan the QR code from your wallet app.');
+        return;
+    }
+
     try {
+        // Mark connection as active
+        activeConnections.set(userId, true);
+
         await walletConnectService.initialize();
         
         const { uri, qrCode } = await walletConnectService.generateConnectionUri(userId);
         const qrImagePath = path.join(__dirname, `qr-${userId}.png`);
         await QRCode.toFile(qrImagePath, uri);
 
-        const connectMessage = `🔐 *Connect Wallet*
+        const connectMessage = `🔐 <b>Connect Wallet</b>
 
-Scan QR-Code with your Wallet-App oder nutze den Link.
+Scan the QR-Code with your Wallet App:
 
-After scanning erhältst du access to community voting!`;
+[MetaMask] [Trust Wallet] [Rainbow] [Phantom] [BlackFort]
+
+Or use this link:
+${uri}
+
+After scanning you'll get access to community voting!`;
 
         // Versuche Photo zu senden
         let photoSent = false;
         try {
             await bot.sendPhoto(chatId, qrImagePath, {
                 caption: connectMessage,
-                parse_mode: 'Markdown'
+                parse_mode: 'HTML'
             });
             photoSent = true;
         } catch (photoErr) {
-            console.log('� QR-Photo could not be gesendet werden, sending text only:', photoErr.message);
-            await bot.sendMessage(chatId, connectMessage, { parse_mode: 'Markdown' });
+            console.log('⚠️ QR-Photo could not be sent, sending text only:', photoErr.message);
+            // Falls Photo fehlgeschlagen, sende Text mit Link
+            await bot.sendMessage(chatId, connectMessage, { parse_mode: 'HTML' });
         } finally {
             try {
                 require('fs').unlinkSync(qrImagePath);
@@ -684,14 +724,14 @@ After scanning erhältst du access to community voting!`;
             console.log(`⚠️ User trying to connect different Wallet zu verbinden. Aktuelle Wallet: ${userReg.currentWallet}`);
             await bot.sendMessage(
                 chatId, 
-                `⚠️ *Du trying to connect a different Wallet zu verbinden!*\n\n` +
-                `❌ Das does not work, da du bereits mit dieser wallet connected bist:\n\n` +
-                `💳 \`${userReg.currentWallet}\`\n\n` +
-                `*Options:*\n` +
+                `⚠️ <b>You are trying to connect a different wallet!</b>\n\n` +
+                `❌ This won't work because you are already connected with this wallet:\n\n` +
+                `💳 <code>${userReg.currentWallet}</code>\n\n` +
+                `<b>Options:</b>\n` +
                 `1️⃣ /disconnect - Disconnect current wallet\n` +
-                `2️⃣ /connect - Neue Wallet verbinden\n\n` +
+                `2️⃣ /connect - Connect a new wallet\n\n` +
                 `Questions? Contact @AEra_Support`,
-                { parse_mode: 'Markdown' }
+                { parse_mode: 'HTML' }
             );
             return;
         }
@@ -703,35 +743,35 @@ After scanning erhältst du access to community voting!`;
         if (!alreadyReceivedAirdrop && airdropService) {
             // First time connecting - send airdrop
             try {
-                console.log(`💰 Sending 0.5 AERA an ${result.address}...`);
+                console.log(`💰 Sending 0.5 AERA to ${result.address}...`);
                 const airdropResult = await airdropService.sendAirdrop(result.address);
                 
                 if (airdropResult.success) {
                     // Mark airdrop as sent in database
                     userService.markAirdropSent(userId, airdropResult.txHash, '0.5');
-                    aeraSentMessage = `\n\n💰 *0.5 AERA Willkommensbonus* wurde gebucht!\n📝 TX: \`${airdropResult.txHash.substring(0, 10)}...\``;
+                    aeraSentMessage = `\n\n💰 <b>0.5 AERA Welcome Bonus</b> transferred!\n📝 TX: <code>${airdropResult.txHash.substring(0, 10)}...</code>`;
                     console.log(`✅ Airdrop successful: ${airdropResult.txHash}`);
                 } else {
                     // Mark as failed
                     userService.markAirdropFailed(userId, airdropResult.message);
-                    aeraSentMessage = `\n\n⚠️ Airdrop fehlgeschlagen: ${airdropResult.message}`;
+                    aeraSentMessage = `\n\n⚠️ Airdrop failed: ${airdropResult.message}`;
                     console.error(`❌ Airdrop Failed: ${airdropResult.message}`);
                 }
             } catch (err) {
                 userService.markAirdropFailed(userId, err.message);
                 console.error('❌ AERA transfer error:', err.message);
-                aeraSentMessage = `\n\n⚠️ Automatic AERA bonus fehlgeschlagen.`;
+                aeraSentMessage = `\n\n⚠️ Automatic AERA bonus failed.`;
             }
         } else if (alreadyReceivedAirdrop) {
             // Already received airdrop before
-            aeraSentMessage = `\n\n✅ Du hast bereits deinen welcome bonus received!`;
+            aeraSentMessage = `\n\n✅ You already received your welcome bonus!`;
             if (userReg.airdropTxHash) {
-                aeraSentMessage += `\n📝 Previous TX: \`${userReg.airdropTxHash.substring(0, 10)}...\``;
+                aeraSentMessage += `\n📝 Previous TX: <code>${userReg.airdropTxHash.substring(0, 10)}...</code>`;
             }
         }
 
-        await bot.sendMessage(chatId, `✅ *Wallet successfully connected!*\n\n💳 *Address:* \`${result.address}\`\n\nDu can now participate in polls teilnehmen! Use /polls to vote.${aeraSentMessage}`, { parse_mode: 'Markdown' });
-        console.log(`✅ Wallet für User ${userId} verbunden: ${result.address}`);
+        await bot.sendMessage(chatId, `✅ <b>Wallet successfully connected!</b>\n\n💳 <b>Address:</b> <code>${result.address}</code>\n\nYou can now participate in polls! Use /polls to vote.${aeraSentMessage}`, { parse_mode: 'HTML' });
+        console.log(`✅ Wallet for User ${userId} connected: ${result.address}`);
 
     } catch (error) {
         // Error handling für ALLES - Photo, WalletConnect, Airdrop
@@ -744,8 +784,8 @@ After scanning erhältst du access to community voting!`;
             if (existingUser && existingUser.walletAddress) {
                 const logoPath = getRandomLogo();  // ✅ Zufälliges Logo laden
                 
-                const errorMessage = `⚠️ *Dein Telegram account is already mit einer wallet connected!*\n\n💳 *Registered Wallet:* \`${existingUser.walletAddress}\`\n\n` +
-                    `*Please connect mit deiner registrierten Wallet:*\n\n` +
+                const errorMessage = `⚠️ <b>Your Telegram account is already connected with a wallet!</b>\n\n💳 <b>Registered Wallet:</b> <code>${existingUser.walletAddress}</code>\n\n` +
+                    `<b>Please connect with your registered wallet:</b>\n\n` +
                     `1️⃣ /wallet - Show current wallet\n\n` +
                     `2️⃣ /connect - Connect with registered wallet\n\n` +
                     `3️⃣ /disconnect - Disconnect current wallet`;
@@ -753,11 +793,11 @@ After scanning erhältst du access to community voting!`;
                 // ✅ Sende Photo mit Failedmeldung
                 await bot.sendPhoto(chatId, logoPath, {
                     caption: errorMessage,
-                    parse_mode: 'Markdown'
+                    parse_mode: 'HTML'
                 }).catch((err) => {
                     // Fallback: Nur Text wenn Photo fehlschlägt
                     console.log('⚠️ Photo konnte nicht gesendet werden');
-                    bot.sendMessage(chatId, errorMessage, { parse_mode: 'Markdown' });
+                    bot.sendMessage(chatId, errorMessage, { parse_mode: 'HTML' });
                 });
                 
                 return;
@@ -769,14 +809,17 @@ After scanning erhältst du access to community voting!`;
         // Generic error message
         await bot.sendMessage(
             chatId, 
-            `❌ *Wallet connection failed.*\n\n` +
-            `*Possible reasons:*\n` +
+            `❌ <b>Wallet connection failed.</b>\n\n` +
+            `<b>Possible reasons:</b>\n` +
             `• Du hast die Verbindung in deiner Wallet-App rejected\n` +
             `• Die Verbindung wurde interrupted\n` +
             `• Waited too long (Timeout)\n\n` +
             `Please try again mit /connect`,
-            { parse_mode: 'Markdown' }
+            { parse_mode: 'HTML' }
         );
+    } finally {
+        // Always remove from active connections
+        activeConnections.delete(userId);
     }
 });
 
@@ -801,41 +844,38 @@ bot.onText(/\/wallet/, (msg) => {
     const chatId = msg.chat.id;
     const userId = msg.from.id;
 
-    const session = walletConnectService.getUserSession(userId);
-    const activeSession = walletConnectService.getActiveSession(userId);
+    // Check database first (most reliable source)
+    const userRecord = userService.getUserByTelegramId(userId);
 
-    if (activeSession && session && session.address) {
-        // Get database info
-        const userRecord = userService.getUserByTelegramId(userId);
-        let airdropStatus = '❓ Unbekannt';
+    if (userRecord && userRecord.walletAddress) {
+        // Wallet exists in database
+        let airdropStatus = '❓ Unknown';
         let airdropTx = '';
         
-        if (userRecord) {
-            if (userRecord.airdropStatus === 'completed') {
-                airdropStatus = '✅ Received';
-                if (userRecord.airdropTxHash) {
-                    airdropTx = `\n*TX:* \`${userRecord.airdropTxHash.substring(0, 12)}...\``;
-                }
-            } else if (userRecord.airdropStatus === 'failed') {
-                airdropStatus = '❌ Failed';
-            } else {
-                airdropStatus = '⏳ Pending';
+        if (userRecord.airdropStatus === 'completed') {
+            airdropStatus = '✅ Received';
+            if (userRecord.airdropTxHash) {
+                airdropTx = `\n<b>TX:</b> <code>${userRecord.airdropTxHash.substring(0, 12)}...</code>`;
             }
+        } else if (userRecord.airdropStatus === 'failed') {
+            airdropStatus = '❌ Failed';
+        } else {
+            airdropStatus = '⏳ Pending';
         }
 
-        const walletMessage = `✅ *Wallet Connected*
+        const walletMessage = `✅ <b>Wallet Connected</b>
 
-*Address:* \`${session.address}\`
-*Status:* Active
-*Chain:* Ethereum Sepolia
+<b>Address:</b> <code>${userRecord.walletAddress}</code>
+<b>Status:</b> Active
+<b>Chain:</b> Ethereum Sepolia
 
-💰 *Airdrop Status:* ${airdropStatus}${airdropTx}
+💰 <b>Airdrop Status:</b> ${airdropStatus}${airdropTx}
 
-Start voting mit /polls`;
+Start voting with /polls`;
 
-        bot.sendMessage(chatId, walletMessage, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, walletMessage, { parse_mode: 'HTML' });
     } else {
-        bot.sendMessage(chatId, '⚠️ Keine wallet connected. Nutze /connect');
+        bot.sendMessage(chatId, '⚠️ No wallet connected. Use /connect to link your wallet.');
     }
 });
 
@@ -864,19 +904,61 @@ bot.onText(/\/createpoll\s+(.+)/, async (msg, match) => {
             title.trim(),
             'Community Poll',
             options.map(o => o.trim()),
-            86400
+            86400  // 24 hours
         );
 
-        let pollMessage = `🗳️ *Standard poll created*\n\n*${poll.title}*\n\n`;
+        let pollMessage = `🗳️ <b>Standard poll created</b>\n\n<b>${poll.title}</b>\n\n`;
         poll.options.forEach(opt => {
             pollMessage += `${opt.id + 1}. ${opt.text}\n`;
         });
-        pollMessage += `\n*Vote with:*\n`;
+        pollMessage += `\n<b>Vote with:</b>\n`;
         poll.options.forEach(opt => {
             pollMessage += `/vote ${poll.id} ${opt.id + 1} - ${opt.text}\n`;
         });
+        pollMessage += `\n⏰ <b>Duration:</b> 24 hours`;
 
-        bot.sendMessage(chatId, pollMessage, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, pollMessage, { parse_mode: 'HTML' });
+    } catch (error) {
+        bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
+    }
+});
+
+// EXTENDED POLL - 72 HOURS
+bot.onText(/\/createpoll72h\s+(.+)/, async (msg, match) => {
+    const chatId = msg.chat.id;
+    const userId = msg.from.id;
+
+    if (userId.toString() !== ADMIN_USER_ID) {
+        bot.sendMessage(chatId, '❌ Only admin can create polls');
+        return;
+    }
+
+    try {
+        const parts = match[1].split('|');
+        if (parts.length < 3) {
+            bot.sendMessage(chatId, '❌ Format: /createpoll72h Titel|Option1|Option2|Option3');
+            return;
+        }
+
+        const [title, ...options] = parts;
+        const poll = pollService.createPoll(
+            title.trim(),
+            'Extended Community Poll',
+            options.map(o => o.trim()),
+            259200  // 72 hours (3 * 24 * 60 * 60)
+        );
+
+        let pollMessage = `🗳️ <b>Extended Poll Created (72 hours)</b>\n\n<b>${poll.title}</b>\n\n`;
+        poll.options.forEach(opt => {
+            pollMessage += `${opt.id + 1}. ${opt.text}\n`;
+        });
+        pollMessage += `\n<b>Vote with:</b>\n`;
+        poll.options.forEach(opt => {
+            pollMessage += `/vote ${poll.id} ${opt.id + 1} - ${opt.text}\n`;
+        });
+        pollMessage += `\n⏰ <b>Duration:</b> 72 hours (3 days)`;
+
+        bot.sendMessage(chatId, pollMessage, { parse_mode: 'HTML' });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
     }
@@ -898,7 +980,7 @@ bot.onText(/\/poll (\d+)/, (msg, match) => {
         const timeLeft = Math.floor(poll.timeRemaining / 1000 / 60);
         const totalVotes = poll.totalVotes || 1;
 
-        let pollMessage = `🗳️ *${poll.title}*\n${status}\n\n`;
+        let pollMessage = `🗳️ <b>${poll.title}</b>\n${status}\n\n`;
         
         poll.options.forEach(opt => {
             const percentage = Math.round((opt.votes / totalVotes) * 100);
@@ -911,15 +993,15 @@ bot.onText(/\/poll (\d+)/, (msg, match) => {
         pollMessage += `⏱️ ${timeLeft} Min | 📊 Total: ${poll.totalVotes}\n`;
         
         if (poll.active) {
-            pollMessage += `Vote: /vote ${poll.id} <option>`;
+            pollMessage += `Vote: /vote ${poll.id} &lt;option&gt;`;
         }
 
         const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: pollMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, pollMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, pollMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
@@ -941,7 +1023,7 @@ bot.onText(/\/wpoll (\d+)/, (msg, match) => {
         const status = poll.active ? '🟢 Active' : '⭕ Closed';
         const timeLeft = Math.floor(poll.timeRemaining / 1000 / 60);
 
-        let pollMessage = `🎯 *${poll.title}*\n${status}\n\n`;
+        let pollMessage = `🎯 <b>${poll.title}</b>\n${status}\n\n`;
         
         poll.options.forEach(opt => {
             const percentage = parseInt(opt.percentage);
@@ -959,12 +1041,92 @@ bot.onText(/\/wpoll (\d+)/, (msg, match) => {
         const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: pollMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, pollMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, pollMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
+    }
+});
+
+// WVOTE - Weighted Poll abstimmen (Token-gewichtet)
+bot.onText(/\/wvote\s+(\d+)\s+(\d+)/, async (msg, match) => {
+    const chatId = msg.chat.id;
+    const userId = msg.from.id;
+    const pollId = parseInt(match[1]);
+    const optionId = parseInt(match[2]) - 1; // Convert to 0-indexed
+    
+    try {
+        const poll = weightedPollService.weightedPolls.get(pollId);
+        
+        if (!poll) {
+            bot.sendMessage(chatId, `❌ Weighted Poll #${pollId} not found`);
+            return;
+        }
+        
+        if (!poll.active) {
+            bot.sendMessage(chatId, `❌ Weighted Poll #${pollId} has ended`);
+            return;
+        }
+        
+        if (optionId < 0 || optionId >= poll.options.length) {
+            bot.sendMessage(chatId, `❌ Invalid option. Use /wvote ${pollId} <1-${poll.options.length}>`);
+            return;
+        }
+        
+        // Check if user already voted (voters is a Map in weightedPolls)
+        const hasVoted = poll.voters ? poll.voters.has(userId.toString()) : 
+                         poll.options.some(opt => opt.voters && opt.voters.has(userId.toString()));
+        if (hasVoted) {
+            bot.sendMessage(chatId, `❌ You already voted on this weighted poll`);
+            return;
+        }
+        
+        // Get user's token balance
+        let userBalance;
+        try {
+            userBalance = await getTokenBalance(userId);
+        } catch (balanceError) {
+            console.warn(`⚠️ Could not check balance for user ${userId}:`, balanceError.message);
+            bot.sendMessage(chatId, `❌ Could not verify token balance. Please ensure your wallet is connected.`);
+            return;
+        }
+        
+        if (userBalance <= 0) {
+            bot.sendMessage(chatId, `❌ You need AERA tokens to vote in weighted polls\n💰 Your balance: ${userBalance} AERA`);
+            return;
+        }
+        
+        // Record weighted vote
+        const userBalanceBigInt = BigInt(Math.floor(userBalance * 1e18)); // Convert to Wei
+        const userIdStr = userId.toString();
+        
+        // Initialize voters as Map if it's not already
+        if (!poll.options[optionId].voters) {
+            poll.options[optionId].voters = new Map();
+        }
+        if (!poll.voters) {
+            poll.voters = new Map();
+        }
+        
+        poll.options[optionId].votes = (poll.options[optionId].votes || 0) + 1;
+        poll.options[optionId].voters.set(userIdStr, userBalance);
+        poll.options[optionId].weightedVotes = (poll.options[optionId].weightedVotes || 0n) + userBalanceBigInt;
+        poll.options[optionId].voteCount = poll.options[optionId].voters.size;
+        
+        poll.totalWeightedVotes = (poll.totalWeightedVotes || 0n) + userBalanceBigInt;
+        poll.voteCount = (poll.voteCount || 0) + 1;
+        poll.voters.set(userIdStr, userBalance);
+        
+        weightedPollService.saveWeightedPolls();
+        
+        const option = poll.options[optionId];
+        bot.sendMessage(chatId, `✅ Weighted vote recorded!\n\n📊 You voted for: <b>${option.text}</b>\n💰 Vote weight: ${userBalance} AERA\n\n⚖️ #${pollId} - ${poll.title}`, { parse_mode: 'HTML' });
+        
+    } catch (error) {
+        console.error('Weighted vote error:', error);
+        bot.sendMessage(chatId, `❌ Voting failed: ${error.message}`);
     }
 });
 
@@ -977,24 +1139,24 @@ bot.onText(/\/results (\d+)/, (msg, match) => {
         // Versuche zuerst gewichtete Poll
         const weightedResults = weightedPollService.getPollResults(pollId);
         if (weightedResults) {
-            let resultMessage = `📊 *${weightedResults.title}*\n\n`;
-            resultMessage += `🏆 *Gewinner:* ${weightedResults.results[0].option}\n`;
+            let resultMessage = `📊 <b>${weightedResults.title}</b>\n\n`;
+            resultMessage += `🏆 <b>Gewinner:</b> ${weightedResults.results[0].option}\n`;
             resultMessage += `💰 ${weightedResults.results[0].weightedVotes} AERA\n\n`;
 
-            resultMessage += `*Rangliste:*\n`;
+            resultMessage += `<b>Rangliste:</b>\n`;
             weightedResults.results.forEach(res => {
                 resultMessage += `${res.rank}. ${res.option}\n`;
                 resultMessage += `   ${res.percentage}% | ${res.weightedVotes} | ${res.voteCount} Votes\n`;
             });
 
-            resultMessage += `\n*Total:*\n${weightedResults.totalWeightedVotes} AERA | ${weightedResults.totalVoters} Voters`;
+            resultMessage += `\n<b>Total:</b>\n${weightedResults.totalWeightedVotes} AERA | ${weightedResults.totalVoters} Voters`;
 
             const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
             bot.sendPhoto(chatId, logoPath, {
                 caption: resultMessage,
-                parse_mode: 'Markdown'
+                parse_mode: 'HTML'
             }).catch((err) => {
-                bot.sendMessage(chatId, resultMessage, { parse_mode: 'Markdown' });
+                bot.sendMessage(chatId, resultMessage, { parse_mode: 'HTML' });
             });
             return;
         }
@@ -1006,8 +1168,8 @@ bot.onText(/\/results (\d+)/, (msg, match) => {
             return;
         }
 
-        let resultMessage = `📊 *${poll.title}*\n\n`;
-        resultMessage += `*Options:*\n`;
+        let resultMessage = `📊 <b>${poll.title}</b>\n\n`;
+        resultMessage += `<b>Options:</b>\n`;
         
         let maxVotes = Math.max(...poll.options.map(o => o.votes || 0));
         poll.options.forEach((opt, index) => {
@@ -1017,7 +1179,7 @@ bot.onText(/\/results (\d+)/, (msg, match) => {
             resultMessage += `   ${bar} ${opt.votes || 0} Votes\n`;
         });
 
-        resultMessage += `\n*Total:* ${poll.totalVotes} Votes`;
+        resultMessage += `\n<b>Total:</b> ${poll.totalVotes} Votes`;
         
         if (!poll.active) {
             resultMessage += `\n✅ Poll beendet`;
@@ -1026,9 +1188,9 @@ bot.onText(/\/results (\d+)/, (msg, match) => {
         const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: resultMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, resultMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, resultMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
@@ -1049,13 +1211,13 @@ bot.onText(/\/archived (\d+)/, (msg, match) => {
 
         const report = pollArchiveService.generatePollReport(poll);
         
-        let reportMessage = `📊 *${report.title}*\n\n`;
-        reportMessage += `*Time period:*\n${report.duration.start.split('T')[0]}\n\n`;
-        reportMessage += `*Summary:*\n`;
+        let reportMessage = `📊 <b>${report.title}</b>\n\n`;
+        reportMessage += `<b>Time period:</b>\n${report.duration.start.split('T')[0]}\n\n`;
+        reportMessage += `<b>Summary:</b>\n`;
         reportMessage += `👥 ${report.summary.totalVoters} Voters\n`;
         reportMessage += `💰 ${report.summary.totalWeightedVotes} AERA\n\n`;
 
-        reportMessage += `*Results:*\n`;
+        reportMessage += `<b>Results:</b>\n`;
         report.results.slice(0, 5).forEach(res => {
             reportMessage += `${res.rank}. ${res.option} - ${res.percentage}%\n`;
         });
@@ -1063,9 +1225,9 @@ bot.onText(/\/archived (\d+)/, (msg, match) => {
         const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: reportMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, reportMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, reportMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
@@ -1083,17 +1245,17 @@ bot.onText(/\/stats/, (msg) => {
         // Get airdrop statistics
         const airdropStats = userService.getAirdropStats();
 
-        let statsMessage = `📈 *Statistics*\n\n`;
+        let statsMessage = `📈 <b>Statistics</b>\n\n`;
         
         // Airdrop Stats
-        statsMessage += `*💰 Airdrop Status:*\n`;
+        statsMessage += `<b>💰 Airdrop Status:</b>\n`;
         statsMessage += `✅ Received: ${airdropStats.completed}\n`;
         statsMessage += `⏳ Pending: ${airdropStats.pending}\n`;
         statsMessage += `❌ Failed: ${airdropStats.failed}\n`;
         statsMessage += `👥 Total: ${airdropStats.total}\n\n`;
         
         // Poll Stats
-        statsMessage += `*📊 Polls:*\n`;
+        statsMessage += `<b>📊 Polls:</b>\n`;
         statsMessage += `Archived: ${pollStats.archivedPolls}\n`;
         statsMessage += `Reports: ${pollStats.generatedReports}\n`;
         statsMessage += `Storage: ${pollStats.storageUsed} MB`;
@@ -1101,9 +1263,9 @@ bot.onText(/\/stats/, (msg) => {
         const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: statsMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, statsMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, statsMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
@@ -1116,32 +1278,94 @@ bot.onText(/\/polls/, (msg) => {
 
     try {
         pollService.closeExpiredPolls();
-        const polls = pollService.getAllPolls();
+        const polls = pollService.getActivePolls();  // Only active polls
 
         if (polls.length === 0) {
             bot.sendMessage(chatId, '📭 No active standard polls');
             return;
         }
 
-        let pollsMessage = '🗳️ *Activee Standard-Pollen*\n\n';
+        let pollsMessage = '🗳️ <b>Active Standard Polls</b>\n\n';
 
         polls.forEach(poll => {
-            const status = poll.active ? '🟢 Active' : '⭕ Closed';
             const timeLeft = Math.floor(poll.timeRemaining / 1000 / 60);
             
-            pollsMessage += `*#${poll.id} - ${poll.title}* ${status}\n`;
+            pollsMessage += `<b>#${poll.id} - ${poll.title}</b> 🟢\n`;
             pollsMessage += `⏱️ ${timeLeft} Min | Votes: ${poll.totalVotes}\n\n`;
         });
 
         const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: pollsMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, pollsMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, pollsMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
+    }
+});
+
+// VOTE - Standard Poll abstimmen
+bot.onText(/\/vote\s+(\d+)\s+(\d+)/, async (msg, match) => {
+    const chatId = msg.chat.id;
+    const userId = msg.from.id;
+    const pollId = parseInt(match[1]);
+    const optionId = parseInt(match[2]) - 1; // Convert to 0-indexed
+    
+    try {
+        const poll = pollService.polls.get(pollId);
+        
+        if (!poll) {
+            bot.sendMessage(chatId, `❌ Poll #${pollId} not found`);
+            return;
+        }
+        
+        if (!poll.active) {
+            bot.sendMessage(chatId, `❌ Poll #${pollId} has ended`);
+            return;
+        }
+        
+        if (optionId < 0 || optionId >= poll.options.length) {
+            bot.sendMessage(chatId, `❌ Invalid option. Use /vote ${pollId} <1-${poll.options.length}>`);
+            return;
+        }
+        
+        // Check if user already voted (voters is a Set)
+        const userIdStr = userId.toString();
+        if (poll.voters.has(userIdStr)) {
+            bot.sendMessage(chatId, `❌ You already voted on this poll`);
+            return;
+        }
+        
+        // Check minimum balance (0.5 AERA)
+        try {
+            const balance = await getTokenBalance(userId);
+            const minRequired = 0.5;
+            
+            if (balance < minRequired) {
+                bot.sendMessage(chatId, `❌ Insufficient AERA balance\n💰 You need ${minRequired} AERA to vote\n📊 Your balance: ${balance} AERA`);
+                return;
+            }
+        } catch (balanceError) {
+            console.warn(`⚠️ Could not check balance for user ${userId}:`, balanceError.message);
+            // Continue anyway - user might not have wallet connected yet
+        }
+        
+        // Record vote
+        poll.options[optionId].votes++;
+        poll.options[optionId].voters.push(userId);
+        poll.totalVotes++;
+        poll.voters.add(userIdStr); // voters is a Set, use .add()
+        
+        pollService.savePolls();
+        
+        const option = poll.options[optionId];
+        bot.sendMessage(chatId, `✅ Vote recorded!\n\n📊 You voted for: <b>${option.text}</b>\n\n#${pollId} - ${poll.title}`, { parse_mode: 'HTML' });
+        
+    } catch (error) {
+        console.error('Vote error:', error);
+        bot.sendMessage(chatId, `❌ Voting failed: ${error.message}`);
     }
 });
 
@@ -1151,29 +1375,28 @@ bot.onText(/\/wpolls/, (msg) => {
 
     try {
         weightedPollService.closeExpiredPolls();
-        const polls = weightedPollService.getAllWeightedPolls();
+        const polls = weightedPollService.getActiveWeightedPolls();  // Only active polls
 
         if (polls.length === 0) {
-            bot.sendMessage(chatId, '📭 No active weighted polls aktiv');
+            bot.sendMessage(chatId, '📭 No active weighted polls');
             return;
         }
 
-        let pollsMessage = '🎯 *Weighted Polls*\n\n';
+        let pollsMessage = '⚖️ <b>Active Weighted Polls</b>\n\n';
 
         polls.forEach(poll => {
-            const status = poll.active ? '🟢 Active' : '⭕ Closed';
             const timeLeft = Math.floor(poll.timeRemaining / 1000 / 60);
             
-            pollsMessage += `*#${poll.id} - ${poll.title}* ${status}\n`;
+            pollsMessage += `<b>#${poll.id} - ${poll.title}</b> 🟢\n`;
             pollsMessage += `⏱️ ${timeLeft} Min | 💰 ${poll.totalWeightedVotes} AERA\n\n`;
         });
 
         const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: pollsMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, pollsMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, pollsMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
@@ -1188,25 +1411,25 @@ bot.onText(/\/archive/, (msg) => {
         const archived = pollArchiveService.getAllArchivedPolls();
         
         if (archived.length === 0) {
-            bot.sendMessage(chatId, '📚 No archived Pollen');
+            bot.sendMessage(chatId, '📚 No archived polls yet. Polls are archived when they expire.');
             return;
         }
 
-        let archiveMessage = `📚 *Archiv (${archived.length})*\n\n`;
+        let archiveMessage = `📚 <b>Archived Polls (${archived.length})</b>\n\n`;
 
         archived.slice(-10).forEach(poll => {
-            const date = new Date(poll.archivedAt).toLocaleDateString('de-DE');
+            const date = new Date(poll.archivedAt).toLocaleDateString('en-US');
             archiveMessage += `#${poll.id} - ${poll.title}\n${date}\n\n`;
         });
 
-        archiveMessage += `Nutze /archived <id> für Details`;
+        archiveMessage += `Use /archived &lt;id&gt; for details`;
 
         const logoPath = getRandomLogo();  // ✅ BILD HINZUGEFÜGT
         bot.sendPhoto(chatId, logoPath, {
             caption: archiveMessage,
-            parse_mode: 'Markdown'
+            parse_mode: 'HTML'
         }).catch((err) => {
-            bot.sendMessage(chatId, archiveMessage, { parse_mode: 'Markdown' });
+            bot.sendMessage(chatId, archiveMessage, { parse_mode: 'HTML' });
         });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
@@ -1250,9 +1473,9 @@ bot.onText(/\/createweightedpoll\s+(.+)/, async (msg, match) => {
             pollMessage += `${opt.id + 1}. ${opt.text}\n`;
         });
         pollMessage += `\n💰 At least ${poll.minTokensRequired} AERA required`;
-        pollMessage += `\nVote with: /wvote ${poll.id} <option>`;
+        pollMessage += `\nVote with: /wvote ${poll.id} &lt;option&gt;`;
 
-        bot.sendMessage(chatId, pollMessage, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, pollMessage, { parse_mode: 'HTML' });
     } catch (error) {
         bot.sendMessage(chatId, `❌ Failed: ${error.message}`);
     }
@@ -1260,7 +1483,22 @@ bot.onText(/\/createweightedpoll\s+(.+)/, async (msg, match) => {
 
 // Error Handler
 bot.on('polling_error', (error) => {
-    console.log('❌ Polling error:', error.code);
+    if (error.code === 'ETELEGRAM') {
+        // Suppressing ETELEGRAM errors - normal retry behavior
+        // Logging disabled to reduce noise
+        return;
+    } else {
+        console.error('❌ Polling error:', error.message);
+    }
+});
+
+// Handle bot errors
+bot.on('error', (error) => {
+    console.error('❌ Bot error:', error.message);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 // Startup Message
@@ -1356,3 +1594,18 @@ const setupBotCommands = async () => {
 
 // Rufe die Funktion beim Start auf:
 setupBotCommands();
+
+// ============================================
+// AUTOMATIC POLL CLEANUP & ARCHIVING
+// ============================================
+// Every 30 seconds, check and archive expired polls
+setInterval(() => {
+    try {
+        pollService.closeExpiredPolls();
+        weightedPollService.closeExpiredPolls();
+    } catch (error) {
+        console.error('⚠️  Error during automatic poll cleanup:', error.message);
+    }
+}, 30000); // Run every 30 seconds
+
+console.log('✅ Automatic poll cleanup scheduler started (30s interval)');
