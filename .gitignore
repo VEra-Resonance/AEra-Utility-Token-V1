@@ -50,3 +50,21 @@ test-results/
 # Temporary files
 tmp/
 temp/
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Backups
+backups/
+
+# Cache
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
